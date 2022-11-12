@@ -38,16 +38,31 @@ const filterPaths = (
             Object.keys(value).forEach((method) => {
                 const schema = value[method]
 
-                if (key.includes('{') && !schema.parameters)
-                    schema.parameters = key
-                        .split('/')
-                        .filter((x) => x.startsWith('{'))
-                        .map((x) => ({
-                            in: 'path',
-                            name: x.slice(1, x.length - 1),
-                            type: 'string',
-                            required: true
-                        }))
+                if (key.includes('{')) {
+                    if (!schema.parameters) schema.parameters = []
+
+                    schema.parameters = [
+                        ...key
+                            .split('/')
+                            .filter(
+                                (x) =>
+                                    x.startsWith('{') &&
+                                    !schema.parameters.find(
+                                        (params: Record<string, any>) =>
+                                            params.in === 'path' &&
+                                            params.name ===
+                                                x.slice(1, x.length - 1)
+                                    )
+                            )
+                            .map((x) => ({
+                                in: 'path',
+                                name: x.slice(1, x.length - 1),
+                                type: 'string',
+                                required: true
+                            })),
+                        ...schema.parameters
+                    ]
+                }
 
                 if (!schema.responses)
                     schema.responses = {
@@ -63,7 +78,7 @@ const filterPaths = (
 
 /**
  * A plugin for [kingworld](https://github.com/saltyaom/kingworld) that auto-generate Swagger page.
- * 
+ *
  * @see https://github.com/saltyaom/kingworld-swagger
  */
 export const swagger = (

@@ -1,35 +1,19 @@
 import { KingWorld, t } from 'kingworld'
-
+// ? @kingworldjs/schema
 import swagger from '../src/index'
 
 const app = new KingWorld()
-    .use(swagger, {
-        // path: '/v2/swagger',
-        // swagger: {
-        //     info: {
-        //         title: 'Hello World',
-        //         version: '0.0.0'
-        //     }
-        // }
-    })
+    .use(swagger)
     .get('/', () => 'hi')
     .get('/unpath/:id', ({ params: { id } }) => id)
-    .get('/unpath/:id/:name', ({ params: { id } }) => id)
     .post(
         '/json/:id',
         ({ body, params: { id }, query: { name } }) => ({
             ...body,
-            id,
-            name
+            id
         }),
         {
             schema: {
-                params: t.Object({
-                    id: t.String()
-                }),
-                query: t.Object({
-                    name: t.String()
-                }),
                 body: t.Object({
                     username: t.String(),
                     password: t.String()
@@ -37,12 +21,12 @@ const app = new KingWorld()
                 response: t.Object({
                     username: t.String(),
                     password: t.String(),
-                    id: t.String(),
-                    name: t.String()
+                    id: t.String()
                 })
             }
         }
     )
+    .get('/unpath/:id/:name', ({ params: { id } }) => id)
     .post('/json', ({ body }) => body, {
         schema: {
             body: t.Object({
