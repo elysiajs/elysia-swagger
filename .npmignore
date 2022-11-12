@@ -1,0 +1,15 @@
+.git
+.gitignore
+.prettierrc
+.cjs.swcrc
+.es.swcrc
+bun.lockb
+
+node_modules
+tsconfig.json
+pnpm-lock.yaml
+jest.config.js
+nodemon.json
+
+example
+tests

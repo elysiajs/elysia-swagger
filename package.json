@@ -1,0 +1,53 @@
+{
+  "name": "@kingworldjs/swagger",
+  "version": "0.0.0-experimental.0",
+  "description": "A plugin for kingworld that auto-generate Swagger page",
+  "author": {
+    "name": "saltyAom",
+    "url": "https://github.com/SaltyAom",
+    "email": "saltyaom@gmail.com"
+  },
+  "main": "build/index.js",
+  "module": "build/es/index.js",
+  "esnext": "build/es/index.js",
+  "types": "src/index.ts",
+  "typings": "src/index.ts",
+  "keywords": [
+    "kingworld",
+    "swagger"
+  ],
+  "homepage": "https://github.com/saltyaom/kingworld-swagger",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/saltyaom/kingworld-swagger"
+  },
+  "bugs": "https://github.com/SaltyAom/kingworld-swagger/issues",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon --config nodemon.json",
+    "test": "bun wiptest",
+    "build": "npm run build:main && npm run build:es",
+    "build:main": "swc src --config-file .cjs.swcrc -d build",
+    "build:es": "swc src --config-file .es.swcrc -d build/es",
+    "release": "npm run build && npm run test && npm publish --access public"
+  },
+  "peerDependencies": {
+    "kingworld": ">= 0.0.0-experimental.41"
+  },
+  "devDependencies": {
+    "@swc/cli": "^0.1.57",
+    "@swc/core": "^1.3.11",
+    "@types/node": "^18.11.7",
+    "@types/swagger-ui-dist": "^3.30.1",
+    "bun-types": "^0.2.2",
+    "eslint": "^8.26.0",
+    "kingworld": "^0.0.0-experimental.41",
+    "nodemon": "^2.0.20",
+    "openapi-types": "^12.0.2",
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "@kingworldjs/static": "0.0.0-experimental.1",
+    "swagger-ui-dist": "^4.15.5"
+  }
+}
