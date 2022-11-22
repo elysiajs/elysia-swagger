@@ -12,7 +12,7 @@ import { KingWorld } from 'kingworld'
 import { swagger } from '@kingworldjs/swagger'
 
 const app = new KingWorld()
-    .use(swagger)
+    .use(swagger())
     .get('/', () => 'hi')
     .get('/unpath/:id', ({ params: { id } }) => id)
     .get('/unpath/:id/:name', ({ params: { id, name } }) => `${id} ${name}`)
