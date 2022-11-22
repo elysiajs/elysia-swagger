@@ -1,5 +1,5 @@
 # @kingworldjs/swagger
-A plugin for [kingworld](https://github.com/saltyaom/kingworld) that auto-generate Swagger page.
+A plugin for [kingworld](https://github.com/saltyaom/kingworld) to auto-generate Swagger page.
 
 ## Installation
 ```bash
@@ -8,8 +8,8 @@ bun add @kingworldjs/swagger
 
 ## Example
 ```typescript
-import KingWorld from 'kingworld'
-import swagger from '@kingworldjs/swagger'
+import { KingWorld } from 'kingworld'
+import { swagger } from '@kingworldjs/swagger'
 
 const app = new KingWorld()
     .use(swagger)
@@ -67,4 +67,4 @@ Determine if Swagger should exclude static files.
 ## exclude
 @default []
 
-Paths to exclude from Swagger endpoint
+Paths to exclude from the Swagger endpoint
