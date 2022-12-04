@@ -156,7 +156,7 @@ export const swagger =
                     ...defaultConfig,
                     ...swagger,
                     info: {
-                        title: 'KingWorld Documentation',
+                        title: 'Elysia Documentation',
                         description: 'Developement documentation',
                         version: '0.0.0',
                         ...swagger.info

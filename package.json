@@ -13,7 +13,7 @@
   "types": "src/index.ts",
   "typings": "src/index.ts",
   "keywords": [
-    "kingworld",
+    "elysia",
     "swagger"
   ],
   "homepage": "https://github.com/elysiajs/elysia-swagger",
