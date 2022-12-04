@@ -1,7 +1,7 @@
 {
-  "name": "@kingworldjs/swagger",
+  "name": "@elysiajs/swagger",
   "version": "0.0.0-experimental.3",
-  "description": "A plugin for kingworld to auto-generate Swagger page",
+  "description": "A plugin for Elysia to auto-generate Swagger page",
   "author": {
     "name": "saltyAom",
     "url": "https://github.com/SaltyAom",
@@ -16,12 +16,12 @@
     "kingworld",
     "swagger"
   ],
-  "homepage": "https://github.com/saltyaom/kingworld-swagger",
+  "homepage": "https://github.com/elysiajs/elysia-swagger",
   "repository": {
     "type": "git",
-    "url": "https://github.com/saltyaom/kingworld-swagger"
+    "url": "https://github.com/elysiajs/elysia-swagger"
   },
-  "bugs": "https://github.com/SaltyAom/kingworld-swagger/issues",
+  "bugs": "https://github.com/elysiajs/elysia-swagger/issues",
   "license": "MIT",
   "scripts": {
     "dev": "nodemon --config nodemon.json",
@@ -32,7 +32,7 @@
     "release": "npm run build && npm run test && npm publish --access public"
   },
   "peerDependencies": {
-    "kingworld": ">= 0.0.0-experimental.51"
+    "elysia": ">= 0.0.0-experimental.56"
   },
   "devDependencies": {
     "@swc/cli": "^0.1.57",
@@ -41,12 +41,12 @@
     "@types/swagger-ui-dist": "^3.30.1",
     "bun-types": "^0.2.2",
     "eslint": "^8.26.0",
-    "kingworld": "^0.0.0-experimental.51",
+    "elysia": "^0.0.0-experimental.56",
     "nodemon": "^2.0.20",
     "typescript": "^4.8.4"
   },
   "dependencies": {
-    "@kingworldjs/static": "0.0.0-experimental.2",
+    "@elysiajs/static": "0.0.0-experimental.3",
     "openapi-types": "^12.0.2",
     "swagger-ui-dist": "^4.15.5"
   }

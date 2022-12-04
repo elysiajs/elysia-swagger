@@ -1,7 +1,7 @@
-import { type KingWorld, SCHEMA } from 'kingworld'
+import { type Elysia, SCHEMA } from 'elysia'
 import { getAbsoluteFSPath } from 'swagger-ui-dist'
 
-import staticPlugin from '@kingworldjs/static'
+import { staticPlugin } from '@elysiajs/static'
 
 import type { OpenAPIV2 } from 'openapi-types'
 
@@ -77,9 +77,9 @@ const filterPaths = (
 }
 
 /**
- * A plugin for [kingworld](https://github.com/saltyaom/kingworld) that auto-generate Swagger page.
+ * A plugin for [elysia](https://github.com/elysiajs/elysia) that auto-generate Swagger page.
  *
- * @see https://github.com/saltyaom/kingworld-swagger
+ * @see https://github.com/elysiajs/elysia-swagger
  */
 export const swagger =
     (
@@ -120,7 +120,7 @@ export const swagger =
             exclude: []
         }
     ) =>
-    (app: KingWorld) =>
+    (app: Elysia) =>
         app
             .get(path, (context) => {
                 context.set.redirect = `${path}/static/index.html`

@@ -1,17 +1,17 @@
-# @kingworldjs/swagger
-A plugin for [kingworld](https://github.com/saltyaom/kingworld) to auto-generate Swagger page.
+# @elysiajs/swagger
+A plugin for [elysia](https://github.com/elysiajs/elysia) to auto-generate Swagger page.
 
 ## Installation
 ```bash
-bun add @kingworldjs/swagger
+bun add @elysiajs/swagger
 ```
 
 ## Example
 ```typescript
-import { KingWorld } from 'kingworld'
-import { swagger } from '@kingworldjs/swagger'
+import { Elysia } from 'elysia'
+import { swagger } from '@elysiajs/swagger'
 
-const app = new KingWorld()
+const app = new Elysia()
     .use(swagger())
     .get('/', () => 'hi')
     .get('/unpath/:id', ({ params: { id } }) => id)

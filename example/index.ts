@@ -1,9 +1,8 @@
-import { KingWorld, t } from 'kingworld'
-// ? @kingworldjs/schema
+import { Elysia, t } from 'elysia'
 import swagger from '../src/index'
 
-const app = new KingWorld()
-    .use(swagger)
+const app = new Elysia()
+    .use(swagger())
     .get('/', () => 'hi')
     .get('/unpath/:id', ({ params: { id } }) => id)
     .post(

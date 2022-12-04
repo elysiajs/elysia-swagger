@@ -1,6 +1,5 @@
-import KingWorld from 'kingworld'
-
-import swagger from '../src'
+import { Elysia } from 'elysia'
+import { swagger } from '../src'
 
 import { describe, expect, it } from 'bun:test'
 
@@ -8,14 +7,14 @@ const req = (path: string) => new Request(path)
 
 describe('Swagger', () => {
     it('redirect to Swagger page', async () => {
-        const app = new KingWorld().use(swagger())
+        const app = new Elysia().use(swagger())
 
         const res = await app.handle(req('/swagger'))
         expect(res.status).toBe(302)
     })
 
     it('use custom path', async () => {
-        const app = new KingWorld().use(
+        const app = new Elysia().use(
             swagger({
                 path: '/v2/swagger'
             })
