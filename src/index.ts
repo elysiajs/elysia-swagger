@@ -77,7 +77,7 @@ const filterPaths = (
 }
 
 /**
- * A plugin for [elysia](https://github.com/elysiajs/elysia) that auto-generate Swagger page.
+ * Plugin for [elysia](https://github.com/elysiajs/elysia) that auto-generate Swagger page.
  *
  * @see https://github.com/elysiajs/elysia-swagger
  */

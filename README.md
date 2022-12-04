@@ -1,5 +1,5 @@
 # @elysiajs/swagger
-A plugin for [elysia](https://github.com/elysiajs/elysia) to auto-generate Swagger page.
+Plugin for [elysia](https://github.com/elysiajs/elysia) to auto-generate Swagger page.
 
 ## Installation
 ```bash

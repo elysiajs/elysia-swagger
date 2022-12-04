@@ -1,7 +1,7 @@
 {
   "name": "@elysiajs/swagger",
   "version": "0.0.0-experimental.3",
-  "description": "A plugin for Elysia to auto-generate Swagger page",
+  "description": "Plugin for Elysia to auto-generate Swagger page",
   "author": {
     "name": "saltyAom",
     "url": "https://github.com/SaltyAom",
