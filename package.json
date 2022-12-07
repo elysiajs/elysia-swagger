@@ -1,6 +1,6 @@
 {
   "name": "@elysiajs/swagger",
-  "version": "0.1.0-rc.1",
+  "version": "0.1.0-rc.2",
   "description": "Plugin for Elysia to auto-generate Swagger page",
   "author": {
     "name": "saltyAom",
@@ -13,7 +13,7 @@
     "node": "./dist/index.js",
     "default": "./dist/index.js"
   },
-  "types": "./dist/index.d.ts",
+  "types": "./src/index.ts",
   "keywords": [
     "elysia",
     "swagger"
