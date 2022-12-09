@@ -7,6 +7,7 @@
     "url": "https://github.com/SaltyAom",
     "email": "saltyaom@gmail.com"
   },
+  "main": "./dist/index.js",
   "exports": {
     "require": "./dist/cjs/index.js",
     "import": "./dist/index.js",
