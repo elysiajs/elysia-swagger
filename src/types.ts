@@ -1,6 +1,6 @@
 import type { OpenAPIV2 } from "openapi-types"
 
-export interface ElysiaSwaggerConfig {
+export interface ElysiaSwaggerConfig<Path extends string = '/swagger'> {
     /**
      * Customize Swagger config, refers to Swagger 2.0 config
      *
@@ -18,7 +18,7 @@ export interface ElysiaSwaggerConfig {
      *
      * @default '/swagger'
      */
-    path?: string
+    path?: Path
     /**
      * Paths to exclude from Swagger endpoint
      *

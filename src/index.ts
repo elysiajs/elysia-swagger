@@ -21,16 +21,16 @@ const defaultConfig: Partial<OpenAPIV2.Document> = {
  * @see https://github.com/elysiajs/elysia-swagger
  */
 export const swagger =
-    (
+    <Path extends string = '/swagger'>(
         {
             swagger = {},
             excludeStaticFile = true,
-            path = '/swagger',
+            path = '/swagger' as Path,
             exclude = []
-        }: ElysiaSwaggerConfig = {
+        }: ElysiaSwaggerConfig<Path> = {
             swagger: {},
             excludeStaticFile: true,
-            path: '/swagger',
+            path: '/swagger' as Path,
             exclude: []
         }
     ) =>
@@ -59,7 +59,6 @@ export const swagger =
                         ...swagger.info
                     }
                 },
-                // @ts-ignore
                 paths: filterPaths(context.store[SCHEMA], {
                     excludeStaticFile,
                     exclude: Array.isArray(exclude) ? exclude : [exclude]
