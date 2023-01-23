@@ -1,4 +1,4 @@
-import { type Elysia, SCHEMA } from 'elysia'
+import { type Elysia, SCHEMA, DEFS } from 'elysia'
 import { getAbsoluteFSPath } from 'swagger-ui-dist'
 
 import { staticPlugin } from '@elysiajs/static'
@@ -34,11 +34,10 @@ export const swagger =
             exclude: []
         }
     ) =>
-    (app: Elysia) =>
-        app
-            .get(path, (context) => {
-                context.set.redirect = `${path}/static/index.html`
-            })
+    (app: Elysia) => {
+        app.get(path, (context) => {
+            context.set.redirect = `${path}/static/index.html`
+        })
             .get(
                 `${path}/static/swagger-initializer.js`,
                 () =>
@@ -48,7 +47,7 @@ export const swagger =
                         }
                     })
             )
-            .get(`${path}/json`, (context) => ({
+            .get(`${path}/json`, ({ store }) => ({
                 ...{
                     ...defaultConfig,
                     ...swagger,
@@ -59,16 +58,21 @@ export const swagger =
                         ...swagger.info
                     }
                 },
-                paths: filterPaths(context.store[SCHEMA], {
+                paths: filterPaths(store[SCHEMA], {
                     excludeStaticFile,
                     exclude: Array.isArray(exclude) ? exclude : [exclude]
-                })
+                }),
+                definitions: store[DEFS]
             }))
             .use(
                 staticPlugin({
                     prefix: `${path}/static`,
-                    path: getAbsoluteFSPath()
+                    assets: getAbsoluteFSPath()
                 })
             )
+
+        // This is intentional to prevent deeply nested type
+        return app
+    }
 
 export default swagger

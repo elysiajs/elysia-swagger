@@ -3,8 +3,35 @@ import swagger from '../src/index'
 
 const app = new Elysia()
     .use(swagger())
-    .get('/', () => 'hi')
-    .get('/unpath/:id', ({ params: { id } }) => id)
+    .setModel({
+        sign: t.Object(
+            {
+                username: t.String(),
+                password: t.String()
+            },
+            {
+                title: 'Sign Model',
+                description: 'Models for handling authentication'
+            }
+        ),
+        number: t.Number()
+    })
+    .get('/', () => 'hi', {
+        schema: {
+            detail: {
+                summary: 'Ping Pong',
+                description: 'Lorem Ipsum Dolar',
+                tags: ['Test']
+            }
+        }
+    })
+    .get('/unpath/:id', ({ params: { id } }) => id, {
+        schema: {
+            detail: {
+                deprecated: false
+            }
+        }
+    })
     .post(
         '/json/:id',
         ({ body, params: { id }, query: { name } }) => ({
@@ -13,10 +40,7 @@ const app = new Elysia()
         }),
         {
             schema: {
-                body: t.Object({
-                    username: t.String(),
-                    password: t.String()
-                }),
+                body: 'sign',
                 response: t.Object({
                     username: t.String(),
                     password: t.String(),
@@ -26,16 +50,10 @@ const app = new Elysia()
         }
     )
     .get('/unpath/:id/:name', ({ params: { id } }) => id)
-    .post('/json', ({ body }) => body, {
+    .post('/json', ({ body }) => '1', {
         schema: {
-            body: t.Object({
-                username: t.String(),
-                password: t.String()
-            }),
-            response: t.Object({
-                username: t.String(),
-                password: t.String()
-            })
+            body: 'sign',
+            response: 'sign'
         }
     })
     .listen(8080)
