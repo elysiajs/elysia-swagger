@@ -27,8 +27,11 @@ const app = new Elysia()
     })
     .get('/unpath/:id', ({ params: { id } }) => id, {
         schema: {
+            params: t.Object({
+                id: t.String({ description: 'ID to get' })
+            }),
             detail: {
-                deprecated: false
+                deprecated: true
             }
         }
     })
@@ -41,16 +44,32 @@ const app = new Elysia()
         {
             schema: {
                 body: 'sign',
-                response: t.Object({
-                    username: t.String(),
-                    password: t.String(),
-                    id: t.String()
-                })
+                response: {
+                    200: t.Object(
+                        {
+                            username: t.String({
+                                title: 'A'
+                            }),
+                            password: t.String(),
+                            id: t.String()
+                        },
+                        {
+                            description: 'A',
+                            title: 'A'
+                        }
+                    ),
+                    400: t.Object({
+                        error: t.String()
+                    })
+                },
+                detail: {
+                    summary: 'A'
+                }
             }
         }
     )
     .get('/unpath/:id/:name', ({ params: { id } }) => id)
-    .post('/json', ({ body }) => '1', {
+    .post('/json', ({ body }) => body, {
         schema: {
             body: 'sign',
             response: 'sign'
