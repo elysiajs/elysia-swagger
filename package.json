@@ -1,6 +1,6 @@
 {
   "name": "@elysiajs/swagger",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Plugin for Elysia to auto-generate Swagger page",
   "author": {
     "name": "saltyAom",
@@ -41,7 +41,8 @@
     "bun-types": "^0.5.0",
     "eslint": "^8.26.0",
     "elysia": "^0.2.0",
-    "typescript": "^4.9.3"
+    "typescript": "^4.9.3",
+    "openapi-types":"^12.1.0"
   },
   "dependencies": {
     "@elysiajs/static": "0.2.0",
