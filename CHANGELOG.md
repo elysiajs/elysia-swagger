@@ -1,3 +1,11 @@
+# 0.3.0-beta.0 - 25 Feb 2023
+Improvement:
+- Support Elysia >= 0.3.0-beta.0
+
+Breaking Change:
+- Update from OpenAPI 2.x to OpenAPI 3.0.3
+- `swagger.swagger` is renamed to `swagger.documentation`
+
 # 0.1.1 - 8 Jan 2023
 Bug fix:
 - Infers path type

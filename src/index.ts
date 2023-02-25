@@ -1,19 +1,12 @@
 import { type Elysia, SCHEMA, DEFS } from 'elysia'
-import { getAbsoluteFSPath } from 'swagger-ui-dist'
-
 import { staticPlugin } from '@elysiajs/static'
 
-import type { OpenAPIV2 } from 'openapi-types'
+import { getAbsoluteFSPath } from 'swagger-ui-dist'
+
+import type { OpenAPIV3 } from 'openapi-types'
 
 import { filterPaths, formatSwagger } from './utils'
 import type { ElysiaSwaggerConfig } from './types'
-
-const defaultConfig: Partial<OpenAPIV2.Document> = {
-    swagger: '2.0',
-    schemes: ['http', 'https'],
-    consumes: ['application/json', 'text/plain'],
-    produces: ['application/json', 'text/plain']
-}
 
 /**
  * Plugin for [elysia](https://github.com/elysiajs/elysia) that auto-generate Swagger page.
@@ -23,12 +16,12 @@ const defaultConfig: Partial<OpenAPIV2.Document> = {
 export const swagger =
     <Path extends string = '/swagger'>(
         {
-            swagger = {},
+            documentation = {},
             excludeStaticFile = true,
             path = '/swagger' as Path,
             exclude = []
         }: ElysiaSwaggerConfig<Path> = {
-            swagger: {},
+            documentation: {},
             excludeStaticFile: true,
             path: '/swagger' as Path,
             exclude: []
@@ -36,8 +29,58 @@ export const swagger =
     ) =>
     (app: Elysia) => {
         app.get(path, (context) => {
-            context.set.redirect = `${path}/static/index.html`
+            return new Response(
+                `<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Redirecting...</title>
+    <meta charset="utf8">
+    <meta http-equiv="refresh" content="0; url=${path}/static/index.html">
+    <script>
+        window.location = ${path}/static/index.html
+    </script>
+</head>
+<body>
+    If you're not being redirected, use this
+    <a href=${path}/static/index.html>
+        link
+    </a>
+</body>
+</html>`,
+                {
+                    status: 302,
+                    headers: {
+                        'content-type': 'text/html; charset=utf8',
+                        Location: `${path}/static/index.html`
+                    }
+                }
+            )
         })
+            .get(
+                `${path}/json`,
+                (content) =>
+                    ({
+                        openapi: '3.0.3',
+                        ...{
+                            ...documentation,
+                            info: {
+                                title: 'Elysia Documentation',
+                                description: 'Developement documentation',
+                                version: '0.0.0',
+                                ...documentation.info
+                            }
+                        },
+                        paths: filterPaths(content[SCHEMA], {
+                            excludeStaticFile,
+                            exclude: Array.isArray(exclude)
+                                ? exclude
+                                : [exclude]
+                        }),
+                        components: {
+                            schemas: content[DEFS]
+                        }
+                    } satisfies OpenAPIV3.Document)
+            )
             .get(
                 `${path}/static/swagger-initializer.js`,
                 () =>
@@ -47,23 +90,6 @@ export const swagger =
                         }
                     })
             )
-            .get(`${path}/json`, ({ store }) => ({
-                ...{
-                    ...defaultConfig,
-                    ...swagger,
-                    info: {
-                        title: 'Elysia Documentation',
-                        description: 'Developement documentation',
-                        version: '0.0.0',
-                        ...swagger.info
-                    }
-                },
-                paths: filterPaths(store[SCHEMA], {
-                    excludeStaticFile,
-                    exclude: Array.isArray(exclude) ? exclude : [exclude]
-                }),
-                definitions: store[DEFS]
-            }))
             .use(
                 staticPlugin({
                     prefix: `${path}/static`,

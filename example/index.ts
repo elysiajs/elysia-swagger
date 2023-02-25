@@ -1,8 +1,23 @@
-import { Elysia, t } from 'elysia'
+import { Elysia, t, SCHEMA } from 'elysia'
 import swagger from '../src/index'
 
 const app = new Elysia()
-    .use(swagger())
+    .use(
+        swagger({
+            documentation: {
+                info: {
+                    title: 'Elysia',
+                    version: '0.3.0'
+                },
+                tags: [
+                    {
+                        name: 'Test',
+                        description: 'Hello'
+                    }
+                ]
+            }
+        })
+    )
     .setModel({
         sign: t.Object(
             {
@@ -10,13 +25,12 @@ const app = new Elysia()
                 password: t.String()
             },
             {
-                title: 'Sign Model',
                 description: 'Models for handling authentication'
             }
         ),
         number: t.Number()
     })
-    .get('/', () => 'hi', {
+    .get('/', ({ set }) => 'hi', {
         schema: {
             detail: {
                 summary: 'Ping Pong',
@@ -28,10 +42,22 @@ const app = new Elysia()
     .get('/unpath/:id', ({ params: { id } }) => id, {
         schema: {
             params: t.Object({
-                id: t.String({ description: 'ID to get' })
+                id: t.String({
+                    description: 'Extract value from path parameter'
+                })
             }),
             detail: {
                 deprecated: true
+            }
+        }
+    })
+    .post('/json', ({ body }) => body, {
+        schema: {
+            contentType: 'application/json',
+            body: 'sign',
+            response: 'sign',
+            detail: {
+                summary: 'Using reference model'
             }
         }
     })
@@ -42,20 +68,24 @@ const app = new Elysia()
             id
         }),
         {
+            transform({ params }) {
+                params.id = +params.id
+            },
             schema: {
                 body: 'sign',
+                params: t.Object({
+                    id: t.Number()
+                }),
                 response: {
                     200: t.Object(
                         {
-                            username: t.String({
-                                title: 'A'
-                            }),
-                            password: t.String(),
-                            id: t.String()
+                            id: t.Number(),
+                            username: t.String(),
+                            password: t.String()
                         },
                         {
-                            description: 'A',
-                            title: 'A'
+                            title: 'User',
+                            description: "Contains user's confidential metadata"
                         }
                     ),
                     400: t.Object({
@@ -63,16 +93,34 @@ const app = new Elysia()
                     })
                 },
                 detail: {
-                    summary: 'A'
+                    summary: 'Transform path parameter'
                 }
             }
         }
     )
-    .get('/unpath/:id/:name', ({ params: { id } }) => id)
-    .post('/json', ({ body }) => body, {
+    .post('/file', ({ body: { file } }) => file, {
         schema: {
-            body: 'sign',
-            response: 'sign'
+            contentType: 'multipart/form-data',
+            detail: {
+                summary: 'Upload file demo',
+                description:
+                    'An example usage of using Elysia 0.3 to handle file upload'
+            },
+            body: t.Object({
+                file: t.File()
+            }),
+            response: t.File()
+        }
+    })
+    .post('/files', ({ body: { files } }) => files[0], {
+        schema: {
+            body: t.Object({
+                files: t.Files({
+                    type: 'image',
+                    maxSize: '5m'
+                })
+            }),
+            response: t.File()
         }
     })
     .listen(8080)

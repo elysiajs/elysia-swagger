@@ -1,4 +1,4 @@
-import type { OpenAPIV2 } from "openapi-types"
+import type { OpenAPIV3 } from 'openapi-types'
 
 export interface ElysiaSwaggerConfig<Path extends string = '/swagger'> {
     /**
@@ -6,7 +6,11 @@ export interface ElysiaSwaggerConfig<Path extends string = '/swagger'> {
      *
      * @see https://swagger.io/specification/v2/
      */
-    swagger?: Partial<OpenAPIV2.Document>
+    documentation?: Omit<
+        Partial<OpenAPIV3.Document>,
+        | 'x-express-openapi-additional-middleware'
+        | 'x-express-openapi-validation-strict'
+    >
     /**
      * Determine if Swagger should exclude static files.
      *

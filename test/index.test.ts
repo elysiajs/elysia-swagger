@@ -3,7 +3,7 @@ import { swagger } from '../src'
 
 import { describe, expect, it } from 'bun:test'
 
-const req = (path: string) => new Request(path)
+const req = (path: string) => new Request(`http://localhost${path}`)
 
 describe('Swagger', () => {
     it('redirect to Swagger page', async () => {
