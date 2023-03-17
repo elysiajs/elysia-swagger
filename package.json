@@ -1,6 +1,6 @@
 {
   "name": "@elysiajs/swagger",
-  "version": "0.3.0-rc.0",
+  "version": "0.3.0",
   "description": "Plugin for Elysia to auto-generate Swagger page",
   "author": {
     "name": "saltyAom",
@@ -33,14 +33,14 @@
     "release": "npm run build && npm run test && npm publish --access public"
   },
   "peerDependencies": {
-    "elysia": ">= 0.3.0-beta.0"
+    "elysia": ">= 0.3.0"
   },
   "devDependencies": {
     "@types/node": "^18.11.7",
     "@types/swagger-ui-dist": "^3.30.1",
     "bun-types": "^0.5.7",
     "eslint": "^8.26.0",
-    "elysia": "0.3.0-rc.1",
+    "elysia": "^0.3.0",
     "typescript": "^4.9.4"
   },
   "dependencies": {
