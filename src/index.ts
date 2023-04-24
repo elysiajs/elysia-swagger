@@ -1,11 +1,9 @@
 import { type Elysia, SCHEMA, DEFS } from 'elysia'
 import { staticPlugin } from '@elysiajs/static'
 
-import { getAbsoluteFSPath } from 'swagger-ui-dist'
+import { filterPaths } from './utils'
 
 import type { OpenAPIV3 } from 'openapi-types'
-
-import { filterPaths, formatSwagger } from './utils'
 import type { ElysiaSwaggerConfig } from './types'
 
 /**
@@ -17,85 +15,86 @@ export const swagger =
     <Path extends string = '/swagger'>(
         {
             documentation = {},
+            version = '4.18.2',
             excludeStaticFile = true,
             path = '/swagger' as Path,
             exclude = []
         }: ElysiaSwaggerConfig<Path> = {
             documentation: {},
+            version: '4.18.2',
             excludeStaticFile: true,
             path: '/swagger' as Path,
             exclude: []
         }
     ) =>
     (app: Elysia) => {
+        const info = {
+            title: 'Elysia Documentation',
+            description: 'Developement documentation',
+            version: '0.0.0',
+            ...documentation.info
+        }
+
         app.get(path, (context) => {
             return new Response(
-                `<!DOCTYPE HTML>
-<html>
+                `<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>Redirecting...</title>
-    <meta charset="utf8">
-    <meta http-equiv="refresh" content="0; url=${path}/static/index.html">
-    <script>
-        window.location = ${path}/static/index.html
-    </script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>${info.title}</title>
+    <meta
+        name="description"
+        content="${info.description}"
+    />
+    <meta
+        name="og:description"
+        content="${info.description}"
+    />
+    <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@${version}/swagger-ui.css" />
 </head>
 <body>
-    If you're not being redirected, use this
-    <a href=${path}/static/index.html>
-        link
-    </a>
+    <div id="swagger-ui"></div>
+    <script src="https://unpkg.com/swagger-ui-dist@${version}/swagger-ui-bundle.js" crossorigin></script>
+    <script>
+        window.onload = () => {
+            window.ui = SwaggerUIBundle({
+                url: '${path}/json',
+                dom_id: '#swagger-ui',
+            });
+        };
+    </script>
 </body>
 </html>`,
                 {
-                    status: 302,
                     headers: {
-                        'content-type': 'text/html; charset=utf8',
-                        Location: `${path}/static/index.html`
+                        'content-type': 'text/html; charset=utf8'
                     }
                 }
             )
-        })
-            .get(
-                `${path}/json`,
-                (content) =>
-                    ({
-                        openapi: '3.0.3',
-                        ...{
-                            ...documentation,
-                            info: {
-                                title: 'Elysia Documentation',
-                                description: 'Developement documentation',
-                                version: '0.0.0',
-                                ...documentation.info
-                            }
-                        },
-                        paths: filterPaths(content[SCHEMA], {
-                            excludeStaticFile,
-                            exclude: Array.isArray(exclude)
-                                ? exclude
-                                : [exclude]
-                        }),
-                        components: {
-                            schemas: content[DEFS]
+        }).get(
+            `${path}/json`,
+            (content) =>
+                ({
+                    openapi: '3.0.3',
+                    ...{
+                        ...documentation,
+                        info: {
+                            title: 'Elysia Documentation',
+                            description: 'Developement documentation',
+                            version: '0.0.0',
+                            ...documentation.info
                         }
-                    } satisfies OpenAPIV3.Document)
-            )
-            .get(
-                `${path}/static/swagger-initializer.js`,
-                () =>
-                    new Response(formatSwagger(path), {
-                        headers: {
-                            'content-type': 'text/javascript; charset=utf-8'
-                        }
-                    })
-            )
-            .use(
-                staticPlugin({
-                    prefix: `${path}/static`,
-                    assets: getAbsoluteFSPath()
-                })
-            )
+                    },
+                    paths: filterPaths(content[SCHEMA], {
+                        excludeStaticFile,
+                        exclude: Array.isArray(exclude) ? exclude : [exclude]
+                    }),
+                    components: {
+                        schemas: content[DEFS]
+                    }
+                } satisfies OpenAPIV3.Document)
+        )
 
         // This is intentional to prevent deeply nested type
         return app

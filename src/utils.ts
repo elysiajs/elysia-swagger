@@ -1,19 +1,3 @@
-export const formatSwagger = (path: string) => `window.onload = function() {
-    window.ui = SwaggerUIBundle({
-        url: "${path}/json",
-        dom_id: '#swagger-ui',
-        deepLinking: true,
-        presets: [
-            SwaggerUIBundle.presets.apis,
-            SwaggerUIStandalonePreset
-        ],
-        plugins: [
-            SwaggerUIBundle.plugins.DownloadUrl
-        ],
-        layout: "StandaloneLayout"
-    });
-};`
-
 export const filterPaths = (
     paths: Record<string, any>,
     {

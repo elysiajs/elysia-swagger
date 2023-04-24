@@ -12,6 +12,14 @@ export interface ElysiaSwaggerConfig<Path extends string = '/swagger'> {
         | 'x-express-openapi-validation-strict'
     >
     /**
+     * Version to use for swagger cdn bundle
+     * 
+     * @see unpkg.com/swagger-ui-dist
+     * 
+     * @default 4.18.2
+     */
+    version?: string
+    /**
      * Determine if Swagger should exclude static files.
      *
      * @default true
