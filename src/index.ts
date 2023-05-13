@@ -72,7 +72,8 @@ export const swagger =
                     }
                 }
             )
-        }).get(
+        }).route(
+            'GET',
             `${path}/json`,
             (content) =>
                 ({
@@ -86,14 +87,19 @@ export const swagger =
                             ...documentation.info
                         }
                     },
-                    paths: filterPaths(content[SCHEMA], {
+                    paths: filterPaths(content[SCHEMA]!, {
                         excludeStaticFile,
                         exclude: Array.isArray(exclude) ? exclude : [exclude]
                     }),
                     components: {
                         schemas: content[DEFS]
                     }
-                } satisfies OpenAPIV3.Document)
+                } satisfies OpenAPIV3.Document),
+            {
+                config: {
+                    allowMeta: true
+                }
+            }
         )
 
         // This is intentional to prevent deeply nested type
