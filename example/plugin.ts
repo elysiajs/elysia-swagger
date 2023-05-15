@@ -5,7 +5,7 @@ export const plugin = (app: Elysia) =>
         '/a',
         (app) =>
             app
-                .setModel({
+                .model({
                     sign: t.Object(
                         {
                             username: t.String(),
@@ -18,36 +18,30 @@ export const plugin = (app: Elysia) =>
                     number: t.Number()
                 })
                 .get('/', ({ set }) => 'hi', {
-                    schema: {
-                        detail: {
-                            summary: 'Ping Pong',
-                            description: 'Lorem Ipsum Dolar',
-                            tags: ['Test']
-                        }
+                    detail: {
+                        summary: 'Ping Pong',
+                        description: 'Lorem Ipsum Dolar',
+                        tags: ['Test']
                     }
                 })
                 .get('/unpath/:id', ({ params: { id } }) => id, {
-                    schema: {
-                        params: t.Object({
-                            id: t.String({
-                                description: 'Extract value from path parameter'
-                            })
-                        }),
-                        detail: {
-                            deprecated: true
-                        }
+                    params: t.Object({
+                        id: t.String({
+                            description: 'Extract value from path parameter'
+                        })
+                    }),
+                    detail: {
+                        deprecated: true
                     }
                 })
                 .post('/json', ({ body }) => body, {
-                    schema: {
-                        contentType: 'application/json',
-                        body: 'sign',
-                        response: {
-                            200: 'sign'
-                        },
-                        detail: {
-                            summary: 'Using reference model'
-                        }
+                    type: 'json',
+                    body: 'sign',
+                    response: {
+                        200: 'sign'
+                    },
+                    detail: {
+                        summary: 'Using reference model'
                     }
                 })
                 // .post(
@@ -89,16 +83,14 @@ export const plugin = (app: Elysia) =>
                 //     }
                 // )
                 .post('/file', ({ body: { file } }) => file, {
-                    schema: {
-                        body: t.Object({
-                            file: t.File({
-                                type: ['image/jpeg', 'image/'],
-                                minSize: '1k',
-                                'maxSize': '5m'
-                            })
-                        }),
-                        response: t.File()
-                    }
+                    body: t.Object({
+                        file: t.File({
+                            type: ['image/jpeg', 'image/'],
+                            minSize: '1k',
+                            maxSize: '5m'
+                        })
+                    }),
+                    response: t.File()
                 })
         // .post('/files', ({ body: { files } }) => files[0], {
         //     schema: {

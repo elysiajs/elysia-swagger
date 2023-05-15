@@ -1,5 +1,4 @@
 import { type Elysia, SCHEMA, DEFS } from 'elysia'
-import { staticPlugin } from '@elysiajs/static'
 
 import { filterPaths } from './utils'
 
@@ -75,7 +74,7 @@ export const swagger =
         }).route(
             'GET',
             `${path}/json`,
-            (content) =>
+            (context) =>
                 ({
                     openapi: '3.0.3',
                     ...{
@@ -87,12 +86,12 @@ export const swagger =
                             ...documentation.info
                         }
                     },
-                    paths: filterPaths(content[SCHEMA]!, {
+                    paths: filterPaths(context[SCHEMA]!, {
                         excludeStaticFile,
                         exclude: Array.isArray(exclude) ? exclude : [exclude]
                     }),
                     components: {
-                        schemas: content[DEFS]
+                        schemas: context[DEFS]
                     }
                 } satisfies OpenAPIV3.Document),
             {

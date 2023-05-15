@@ -1,4 +1,4 @@
-import { Elysia, t, SCHEMA } from 'elysia'
+import { Elysia } from 'elysia'
 import { swagger } from '../src/index'
 import { plugin } from './plugin'
 
@@ -8,7 +8,7 @@ const app = new Elysia()
             documentation: {
                 info: {
                     title: 'Elysia',
-                    version: '0.3.0'
+                    version: '0.5.0'
                 },
                 tags: [
                     {
