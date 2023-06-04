@@ -9,9 +9,9 @@
   },
   "main": "./dist/index.js",
   "exports": {
+    "node": "./dist/cjs/index.js",
     "require": "./dist/cjs/index.js",
     "import": "./dist/index.js",
-    "node": "./dist/index.js",
     "default": "./dist/index.js"
   },
   "types": "./src/index.ts",
@@ -28,17 +28,18 @@
   "license": "MIT",
   "scripts": {
     "dev": "bun run --hot example/index.ts",
-    "test": "bun wiptest",
+    "test": "bun wiptest && npm run test:node",
+    "test:node": "npm install --prefix ./test/node/cjs/ && npm install --prefix ./test/node/esm/ && node ./test/node/cjs/index.js && node ./test/node/esm/index.js",
     "build": "rimraf dist && tsc --project tsconfig.esm.json && tsc --project tsconfig.cjs.json",
     "release": "npm run build && npm run test && npm publish --access public"
   },
   "peerDependencies": {
-    "elysia": ">= 0.5.0"
+    "elysia": ">= 0.5.12"
   },
   "devDependencies": {
     "@types/node": "^20.1.4",
     "bun-types": "^0.5.8",
-    "elysia": "0.5.0",
+    "elysia": "0.5.12",
     "eslint": "^8.40.0",
     "rimraf": "4.3",
     "typescript": "^5.0.4"
