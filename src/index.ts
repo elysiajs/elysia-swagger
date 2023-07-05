@@ -29,7 +29,7 @@ export const swagger =
     (app: Elysia) => {
         const info = {
             title: 'Elysia Documentation',
-            description: 'Developement documentation',
+            description: 'Development documentation',
             version: '0.0.0',
             ...documentation.info
         }
@@ -81,7 +81,7 @@ export const swagger =
                         ...documentation,
                         info: {
                             title: 'Elysia Documentation',
-                            description: 'Developement documentation',
+                            description: 'Development documentation',
                             version: '0.0.0',
                             ...documentation.info
                         }
