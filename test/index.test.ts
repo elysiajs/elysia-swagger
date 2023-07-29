@@ -65,4 +65,17 @@ describe('Swagger', () => {
         const res = await app.handle(req('/v2/swagger'))
         expect(res.status).toBe(200)
     })
+
+    it('use custom spec path', async () => {
+        const app = new Elysia().use(
+            swagger({
+                path: '/v2/swagger',
+                specPathname: 'openapi.json'
+            })
+        )
+
+        const res = await app.handle(req('/v2/swagger/openapi.json'))
+        expect(res.status).toBe(200)
+        expect(res.headers.get('content-type')).toContain('application/json')
+    })
 })

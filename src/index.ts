@@ -17,12 +17,14 @@ export const swagger =
             version = '4.18.2',
             excludeStaticFile = true,
             path = '/swagger' as Path,
+            specPathname = 'json',
             exclude = []
         }: ElysiaSwaggerConfig<Path> = {
             documentation: {},
             version: '4.18.2',
             excludeStaticFile: true,
             path: '/swagger' as Path,
+            specPathname: 'json',
             exclude: []
         }
     ) =>
@@ -32,6 +34,10 @@ export const swagger =
             description: 'Developement documentation',
             version: '0.0.0',
             ...documentation.info
+        }
+        
+        if (specPathname.startsWith('/')) {
+            specPathname = specPathname.slice(1)
         }
 
         app.get(path, (context) => {
@@ -58,7 +64,7 @@ export const swagger =
     <script>
         window.onload = () => {
             window.ui = SwaggerUIBundle({
-                url: '${path}/json',
+                url: '${path}/${specPathname}',
                 dom_id: '#swagger-ui',
             });
         };
@@ -73,7 +79,7 @@ export const swagger =
             )
         }).route(
             'GET',
-            `${path}/json`,
+            `${path}/${specPathname}`,
             (context) =>
                 ({
                     openapi: '3.0.3',
