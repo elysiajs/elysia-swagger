@@ -32,6 +32,14 @@ export interface ElysiaSwaggerConfig<Path extends string = '/swagger'> {
      */
     path?: Path
     /**
+     * The pathname for the OpenAPI spec, which will be appended to the path option.
+     * 
+     * @example 'openapi.json' => '/swagger/openapi.json'
+     *
+     * @default 'json'
+     */
+    specPathname?: string
+    /**
      * Paths to exclude from Swagger endpoint
      *
      * @default []
