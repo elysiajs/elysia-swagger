@@ -1,6 +1,6 @@
-import { type Elysia, SCHEMA, DEFS } from 'elysia'
+import { type Elysia, type InternalRoute } from 'elysia'
 
-import { filterPaths } from './utils'
+import { filterPaths, registerSchemaPath } from './utils'
 
 import type { OpenAPIV3 } from 'openapi-types'
 import type { ElysiaSwaggerConfig } from './types'
@@ -27,6 +27,9 @@ export const swagger =
         }
     ) =>
     (app: Elysia) => {
+        const schema = {}
+        let totalRoutes = 0
+
         const info = {
             title: 'Elysia Documentation',
             description: 'Developement documentation',
@@ -34,7 +37,7 @@ export const swagger =
             ...documentation.info
         }
 
-        app.get(path, (context) => {
+        app.get(path, () => {
             return new Response(
                 `<!DOCTYPE html>
 <html lang="en">
@@ -74,8 +77,27 @@ export const swagger =
         }).route(
             'GET',
             `${path}/json`,
-            (context) =>
-                ({
+            () => {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                const routes = app.routes as InternalRoute[]
+
+                if (routes.length !== totalRoutes) {
+                    totalRoutes = routes.length
+
+                    routes.forEach((route: InternalRoute<any>) => {
+                        registerSchemaPath({
+                            schema,
+                            hook: route.hooks,
+                            method: route.method,
+                            path: route.path,
+                            models: app.meta.defs,
+                            contentType: route.hooks.type
+                        })
+                    })
+                }
+
+                return {
                     openapi: '3.0.3',
                     ...{
                         ...documentation,
@@ -86,14 +108,15 @@ export const swagger =
                             ...documentation.info
                         }
                     },
-                    paths: filterPaths(context[SCHEMA]!, {
+                    paths: filterPaths(schema, {
                         excludeStaticFile,
                         exclude: Array.isArray(exclude) ? exclude : [exclude]
                     }),
                     components: {
-                        schemas: context[DEFS]
+                        schemas: app.meta.defs
                     }
-                } satisfies OpenAPIV3.Document),
+                } satisfies OpenAPIV3.Document
+            },
             {
                 config: {
                     allowMeta: true
