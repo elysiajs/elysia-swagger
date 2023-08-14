@@ -35,12 +35,13 @@
     "release": "npm run build && npm run test && npm publish --access public"
   },
   "peerDependencies": {
-    "elysia": ">= 0.6.0-alpha.3"
+    "elysia": ">= 0.6.10"
   },
   "devDependencies": {
+    "@types/lodash.clonedeep": "^4.5.7",
     "@types/node": "^20.1.4",
     "bun-types": "^0.7.0",
-    "elysia": "^0.6.0-alpha.4",
+    "elysia": "^0.6.10",
     "eslint": "^8.40.0",
     "rimraf": "4.3",
     "typescript": "^5.0.4"
