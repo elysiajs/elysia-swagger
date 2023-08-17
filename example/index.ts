@@ -10,18 +10,31 @@ const app = new Elysia({
             documentation: {
                 info: {
                     title: 'Elysia',
-                    version: '0.5.0'
+                    version: '0.6.10'
                 },
                 tags: [
                     {
                         name: 'Test',
                         description: 'Hello'
                     }
-                ]
+                ],
+                components: {
+                    schemas: {
+                        User: {
+                            description: 'string'
+                        }
+                    },
+                    securitySchemes: {
+                        JwtAuth: {
+                            type: 'http',
+                            scheme: 'bearer',
+                            bearerFormat: 'JWT',
+                            description: 'Enter JWT Bearer token **_only_**'
+                        }
+                    }
+                }
             }
         })
     )
     .use(plugin)
     .listen(8080)
-
-console.log(app.routes)

@@ -74,50 +74,50 @@ export const swagger =
                     }
                 }
             )
-        }).route(
-            'GET',
-            `${path}/json`,
-            () => {
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                const routes = app.routes as InternalRoute[]
+        }).route('GET', `${path}/json`, () => {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            const routes = app.routes as InternalRoute[]
 
-                if (routes.length !== totalRoutes) {
-                    totalRoutes = routes.length
+            if (routes.length !== totalRoutes) {
+                totalRoutes = routes.length
 
-                    routes.forEach((route: InternalRoute<any>) => {
-                        registerSchemaPath({
-                            schema,
-                            hook: route.hooks,
-                            method: route.method,
-                            path: route.path,
-                            models: app.meta.defs,
-                            contentType: route.hooks.type
-                        })
+                routes.forEach((route: InternalRoute<any>) => {
+                    registerSchemaPath({
+                        schema,
+                        hook: route.hooks,
+                        method: route.method,
+                        path: route.path,
+                        models: app.meta.defs,
+                        contentType: route.hooks.type
                     })
-                }
-
-                return {
-                    openapi: '3.0.3',
-                    ...{
-                        ...documentation,
-                        info: {
-                            title: 'Elysia Documentation',
-                            description: 'Developement documentation',
-                            version: '0.0.0',
-                            ...documentation.info
-                        }
-                    },
-                    paths: filterPaths(schema, {
-                        excludeStaticFile,
-                        exclude: Array.isArray(exclude) ? exclude : [exclude]
-                    }),
-                    components: {
-                        schemas: app.meta.defs
-                    }
-                } satisfies OpenAPIV3.Document
+                })
             }
-        )
+
+            return {
+                openapi: '3.0.3',
+                ...{
+                    ...documentation,
+                    info: {
+                        title: 'Elysia Documentation',
+                        description: 'Developement documentation',
+                        version: '0.0.0',
+                        ...documentation.info
+                    }
+                },
+                paths: filterPaths(schema, {
+                    excludeStaticFile,
+                    exclude: Array.isArray(exclude) ? exclude : [exclude]
+                }),
+                components: {
+                    ...documentation.components,
+                    schemas: {
+                        ...app.meta.defs,
+                        ...documentation.components?.schemas
+                    }
+                }
+            } satisfies OpenAPIV3.Document
+        })
 
         // This is intentional to prevent deeply nested type
         return app
