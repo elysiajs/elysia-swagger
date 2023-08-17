@@ -116,11 +116,6 @@ export const swagger =
                         schemas: app.meta.defs
                     }
                 } satisfies OpenAPIV3.Document
-            },
-            {
-                config: {
-                    allowMeta: true
-                }
             }
         )
 

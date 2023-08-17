@@ -2,7 +2,9 @@ import { Elysia } from 'elysia'
 import { swagger } from '../src/index'
 import { plugin } from './plugin'
 
-const app = new Elysia()
+const app = new Elysia({
+    aot: false
+})
     .use(
         swagger({
             documentation: {
@@ -21,3 +23,5 @@ const app = new Elysia()
     )
     .use(plugin)
     .listen(8080)
+
+console.log(app.routes)
