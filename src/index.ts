@@ -113,7 +113,7 @@ export const swagger =
                         exclude: Array.isArray(exclude) ? exclude : [exclude]
                     }),
                     components: {
-                        schemas: app.meta.defs
+                        ...documentation.components
                     }
                 } satisfies OpenAPIV3.Document
             },
