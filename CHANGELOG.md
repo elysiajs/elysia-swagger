@@ -1,7 +1,11 @@
+# 0.6.2 - 11 Sep 2023
+- Ship lodash.cloneDeep type
+
+# 0.6.1 - 17 Aug 2023
+- Add support for user provided components
 
 # 0.6.0 - 6 Aug 2023
 - Add support for Elysia 0.6
-
 
 # 0.6.0-rc.0 - 6 Aug 2023
 - Add support for Elysia 0.6

@@ -3,7 +3,7 @@ import { swagger } from '../src/index'
 import { plugin } from './plugin'
 
 const app = new Elysia({
-    aot: false
+    // aot: false
 })
     .use(
         swagger({
