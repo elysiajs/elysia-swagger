@@ -65,4 +65,21 @@ describe('Swagger', () => {
         const res = await app.handle(req('/v2/swagger'))
         expect(res.status).toBe(200)
     })
+
+    it('Swagger UI options', async () => {
+        const app = new Elysia().use(
+            swagger({
+                swaggerOptions: {
+                    persistAuthorization: true
+                }
+            })
+        )
+        const res = await app.handle(req('/swagger')).then((x) => x.text())
+        const expected = `
+        window.onload = () => {
+            window.ui = SwaggerUIBundle({"url":"/swagger/json","dom_id":"#swagger-ui","persistAuthorization":true});
+        };
+        `
+        expect(res.trim().includes(expected.trim())).toBe(true)
+    })
 })

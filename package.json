@@ -47,6 +47,7 @@
   },
   "dependencies": {
     "@types/lodash.clonedeep": "^4.5.7",
+    "@types/swagger-ui": "^3.52.0",
     "lodash.clonedeep": "^4.5.0"
   }
 }

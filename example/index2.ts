@@ -18,6 +18,9 @@ const app = new Elysia({
                         description: 'Hello'
                     }
                 ],
+                security: [
+                    {JwtAuth: []}
+                ],
                 components: {
                     schemas: {
                         User: {
