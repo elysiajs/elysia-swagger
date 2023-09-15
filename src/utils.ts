@@ -1,6 +1,6 @@
 import type { HTTPMethod, LocalHook } from 'elysia'
 
-import { Kind, type TSchema } from '@sinclair/typebox'
+import { Kind, type TSchema, type TAnySchema } from '@sinclair/typebox'
 import type { OpenAPIV3 } from 'openapi-types'
 
 import deepClone from 'lodash.clonedeep'
@@ -36,13 +36,7 @@ export const mapProperties = (
 
 const mapTypesResponse = (
     types: string[],
-    schema:
-        | string
-        | {
-              type: string
-              properties: Object
-              required: string[]
-          }
+    schema: TAnySchema
 ) => {
     const responses: Record<string, OpenAPIV3.MediaTypeObject> = {}
 
@@ -111,89 +105,26 @@ export const registerSchemaPath = ({
     const paramsSchema = hook?.params
     const headerSchema = hook?.headers
     const querySchema = hook?.query
-    let responseSchema = hook?.response as unknown as OpenAPIV3.ResponsesObject
+    const responseSchema: OpenAPIV3.ResponsesObject = {}
 
-    if (typeof responseSchema === 'object') {
-        if (Kind in responseSchema) {
-            const { type, properties, required, ...rest } =
-                responseSchema as typeof responseSchema & {
-                    type: string
-                    properties: Object
-                    required: string[]
-                }
+    const addToResponseSchema = (code: string, { description, ...schema }: TAnySchema) => {
+        responseSchema[code] = {
+            description: description as string,
+            content: mapTypesResponse(contentTypes, schema)
+        }
+    }
 
-            responseSchema = {
-                '200': {
-                    ...rest,
-                    description: rest.description as any,
-                    content: mapTypesResponse(
-                        contentTypes,
-                        type === 'object' || type === 'array'
-                            ? ({
-                                  type,
-                                  properties,
-                                  required
-                              } as any)
-                            : responseSchema
-                    )
-                }
-            }
+    const userProvidedResponseSchema = hook?.response;
+    if (typeof userProvidedResponseSchema === 'object') {
+        if (Kind in userProvidedResponseSchema) {
+            addToResponseSchema('200', userProvidedResponseSchema);
         } else {
-            Object.entries(responseSchema as Record<string, TSchema>).forEach(
-                ([key, value]) => {
-                    if (typeof value === 'string') {
-                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                        const { type, properties, required, ...rest } = models[
-                            value
-                        ] as TSchema & {
-                            type: string
-                            properties: Object
-                            required: string[]
-                        }
-
-                        responseSchema[key] = {
-                            ...rest,
-                            description: rest.description as any,
-                            content: mapTypesResponse(contentTypes, value)
-                        }
-                    } else {
-                        const { type, properties, required, ...rest } =
-                            value as typeof value & {
-                                type: string
-                                properties: Object
-                                required: string[]
-                            }
-
-                        responseSchema[key] = {
-                            ...rest,
-                            description: rest.description as any,
-                            content: mapTypesResponse(contentTypes, {
-                                type,
-                                properties,
-                                required
-                            })
-                        }
-                    }
-                }
-            )
+            Object.entries(userProvidedResponseSchema as Record<string, TSchema>).forEach(([key, value]) => {
+                addToResponseSchema(key, typeof value === 'string' ? models[value] : value)
+            })
         }
-    } else if (typeof responseSchema === 'string') {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { type, properties, required, ...rest } = models[
-            responseSchema
-        ] as TSchema & {
-            type: string
-            properties: Object
-            required: string[]
-        }
-
-        responseSchema = {
-            // @ts-ignore
-            '200': {
-                ...rest,
-                content: mapTypesResponse(contentTypes, responseSchema)
-            }
-        }
+    } else if (typeof userProvidedResponseSchema === 'string') {
+        addToResponseSchema('200', models[userProvidedResponseSchema])
     }
 
     const parameters = [
