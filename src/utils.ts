@@ -22,16 +22,18 @@ export const mapProperties = (
         if (schema in models) schema = models[schema]
         else throw new Error(`Can't find model ${schema}`)
 
-    return Object.entries(schema?.properties ?? []).map(([key, value]) => ({
-        // @ts-ignore
-        ...value,
-        in: name,
-        name: key,
-        // @ts-ignore
-        type: value?.type,
-        // @ts-ignore
-        required: schema!.required?.includes(key) ?? false
-    }))
+    return Object.entries(schema?.properties ?? []).map(([key, value]) => {
+        const { type: valueType = undefined, ...rest } = value as any;
+        return {
+            // @ts-ignore
+            ...rest,
+            schema: { type: valueType },
+            in: name,
+            name: key,
+            // @ts-ignore
+            required: schema!.required?.includes(key) ?? false,
+        };
+    });
 }
 
 const mapTypesResponse = (
@@ -118,7 +120,7 @@ export const registerSchemaPath = ({
 
     if (typeof responseSchema === 'object') {
         if (Kind in responseSchema) {
-            const { type, properties, required, ...rest } =
+            const { type, properties, required, additionalProperties, ...rest } =
                 responseSchema as typeof responseSchema & {
                     type: string
                     properties: Object
@@ -162,7 +164,7 @@ export const registerSchemaPath = ({
                             content: mapTypesResponse(contentTypes, value)
                         }
                     } else {
-                        const { type, properties, required, ...rest } =
+                        const { type, properties, required, additionalProperties, ...rest } =
                             value as typeof value & {
                                 type: string
                                 properties: Object
@@ -286,7 +288,7 @@ export const filterPaths = (
                             .map((x) => ({
                                 in: 'path',
                                 name: x.slice(1, x.length - 1),
-                                type: 'string',
+                                schema: { type: "string" },
                                 required: true
                             })),
                         ...schema.parameters
