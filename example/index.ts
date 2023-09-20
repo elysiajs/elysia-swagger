@@ -10,7 +10,7 @@ const app = new Elysia({
             documentation: {
                 info: {
                     title: 'Elysia',
-                    version: '0.6.10'
+                    version: '0.7.0'
                 },
                 tags: [
                     {

@@ -1,3 +1,14 @@
+# 0.7.1 - 20 Sep 2023
+Bug fix:
+- Add openapi-types as dependencies
+- Fix `any` returned type
+
+# 0.7.0 - 20 Sep 2023
+- Add support for Elysia 0.
+
+# 0.7.0-beta.0 - 18 Sep 2023
+- Add support for Elysia 0.7
+
 # 0.6.2 - 11 Sep 2023
 - Ship lodash.cloneDeep type
 
