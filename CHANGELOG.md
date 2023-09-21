@@ -1,3 +1,8 @@
+# 0.7.2 - 21 Sep 2023
+Bug fix:
+- Paths is undefined
+- Models is not showing
+
 # 0.7.1 - 20 Sep 2023
 Bug fix:
 - Add openapi-types as dependencies

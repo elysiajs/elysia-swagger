@@ -180,6 +180,8 @@ export const registerSchemaPath = ({
             )
         }
     } else if (typeof responseSchema === 'string') {
+        if(!(responseSchema in models)) return
+
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { type, properties, required, ...rest } = models[
             responseSchema
