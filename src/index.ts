@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { type Elysia, type InternalRoute } from 'elysia'
 
 import { filterPaths, registerSchemaPath } from './utils'
@@ -14,23 +15,29 @@ export const swagger =
     <Path extends string = '/swagger'>(
         {
             documentation = {},
-            version = '4.18.2',
+            version = '5.7.2',
             excludeStaticFile = true,
             path = '/swagger' as Path,
             exclude = [],
-            swaggerOptions = {}
+            swaggerOptions = {},
+            theme = `https://unpkg.com/swagger-ui-dist@${version}/swagger-ui.css`,
+            autoDarkMode = true
         }: ElysiaSwaggerConfig<Path> = {
             documentation: {},
-            version: '4.18.2',
+            version: '5.7.2',
             excludeStaticFile: true,
             path: '/swagger' as Path,
             exclude: [],
-            swaggerOptions: {}
+            swaggerOptions: {},
+            autoDarkMode: true
         }
     ) =>
     (app: Elysia) => {
         const schema = {}
         let totalRoutes = 0
+
+        if (!version)
+            version = `https://unpkg.com/swagger-ui-dist@${version}/swagger-ui.css`
 
         const info = {
             title: 'Elysia Documentation',
@@ -73,7 +80,32 @@ export const swagger =
         name="og:description"
         content="${info.description}"
     />
-    <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@${version}/swagger-ui.css" />
+    ${
+        autoDarkMode && typeof theme === 'string'
+            ? `
+    <style>
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #222;
+                color: #faf9a;
+            }
+            .swagger-ui {
+                filter: invert(92%) hue-rotate(180deg);
+            }
+
+            .swagger-ui .microlight {
+                filter: invert(100%) hue-rotate(180deg);
+            }
+        }
+    </style>`
+            : ''
+    }
+    ${
+        typeof theme === 'string'
+            ? `<link rel="stylesheet" href="${theme}" />`
+            : `<link rel="stylesheet" media="(prefers-color-scheme: light)" href="${theme.light}" />
+<link rel="stylesheet" media="(prefers-color-scheme: dark)" href="${theme.dark}" />`
+    }
 </head>
 <body>
     <div id="swagger-ui"></div>

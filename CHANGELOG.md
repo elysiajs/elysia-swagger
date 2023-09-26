@@ -7,6 +7,11 @@ Feature:
 Improvement:
 - [#23](https://github.com/elysiajs/elysia-swagger/pull/23) Add github action to run bun test
 - remove `removeComment` from tsconfig to show JSDoc
+- add `theme` to customize Swagger CSS link
+- add `autoDarkMode` using poor man Swagger dark mode CSS 😭
+
+Change:
+- Set default swagger version to 5.7.2
 
 Bug fix:
 - [#16](https://github.com/elysiajs/elysia-swagger/pull/16) fix: use global prefix
