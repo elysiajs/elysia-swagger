@@ -15,7 +15,7 @@
     "import": "./dist/index.js",
     "default": "./dist/index.js"
   },
-  "types": "./src/index.ts",
+  "types": "./dist/index.d.ts",
   "keywords": [
     "elysia",
     "swagger"
