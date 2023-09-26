@@ -44,6 +44,9 @@ const mapTypesResponse = (
               required: string[]
           }
 ) => {
+    if (typeof schema === 'object'
+        && ['void', 'undefined', 'null'].includes(schema.type)) return;
+
     const responses: Record<string, OpenAPIV3.MediaTypeObject> = {}
 
     for (const type of types)
