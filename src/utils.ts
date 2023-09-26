@@ -44,6 +44,9 @@ const mapTypesResponse = (
               required: string[]
           }
 ) => {
+    if (typeof schema === 'object'
+        && ['void', 'undefined', 'null'].includes(schema.type)) return;
+
     const responses: Record<string, OpenAPIV3.MediaTypeObject> = {}
 
     for (const type of types)
@@ -142,6 +145,8 @@ export const registerSchemaPath = ({
             Object.entries(responseSchema as Record<string, TSchema>).forEach(
                 ([key, value]) => {
                     if (typeof value === 'string') {
+                        if(!models[value]) return
+
                         // eslint-disable-next-line @typescript-eslint/no-unused-vars
                         const { type, properties, required, ...rest } = models[
                             value
@@ -178,6 +183,8 @@ export const registerSchemaPath = ({
             )
         }
     } else if (typeof responseSchema === 'string') {
+        if(!(responseSchema in models)) return
+
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { type, properties, required, ...rest } = models[
             responseSchema

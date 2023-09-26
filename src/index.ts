@@ -39,10 +39,12 @@ export const swagger =
             ...documentation.info
         }
 
+        const pathWithPrefix = `${app.config.prefix}${path}`;
+
         app.get(path, () => {
             const combinedSwaggerOptions = {                                                                                                     
-                url: `${path}/json`,                                                                                                           
-                dom_id: '#swagger-ui',                                                                                                         
+                url: '${pathWithPrefix}/json',
+                dom_id: '#swagger-ui',                                                                                                       
                 ...swaggerOptions                                                                                                              
             }
             const stringifiedSwaggerOptions = JSON.stringify(combinedSwaggerOptions, 
@@ -89,7 +91,7 @@ export const swagger =
                     }
                 }
             )
-        }).route('GET', `${path}/json`, () => {
+        }).get(`${path}/json`, () => {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             const routes = app.routes as InternalRoute[]
@@ -97,13 +99,14 @@ export const swagger =
             if (routes.length !== totalRoutes) {
                 totalRoutes = routes.length
 
-                routes.forEach((route: InternalRoute<any>) => {
+                routes.forEach((route: InternalRoute) => {
                     registerSchemaPath({
                         schema,
                         hook: route.hooks,
                         method: route.method,
                         path: route.path,
-                        models: app.meta.defs,
+                        // @ts-ignore
+                        models: app.definitions.type,
                         contentType: route.hooks.type
                     })
                 })
@@ -127,7 +130,8 @@ export const swagger =
                 components: {
                     ...documentation.components,
                     schemas: {
-                        ...app.meta.defs,
+                        // @ts-ignore
+                        ...app.definitions.type,
                         ...documentation.components?.schemas
                     }
                 }
