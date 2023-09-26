@@ -37,6 +37,8 @@ export const swagger =
             ...documentation.info
         }
 
+        const pathWithPrefix = `${app.config.prefix}${path}`;
+
         app.get(path, () => {
             return new Response(
                 `<!DOCTYPE html>
@@ -61,7 +63,7 @@ export const swagger =
     <script>
         window.onload = () => {
             window.ui = SwaggerUIBundle({
-                url: '${path}/json',
+                url: '${pathWithPrefix}/json',
                 dom_id: '#swagger-ui',
             });
         };
