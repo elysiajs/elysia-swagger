@@ -17,13 +17,15 @@ export const swagger =
             version = '4.18.2',
             excludeStaticFile = true,
             path = '/swagger' as Path,
-            exclude = []
+            exclude = [],
+            swaggerOptions = {}, 
         }: ElysiaSwaggerConfig<Path> = {
             documentation: {},
             version: '4.18.2',
             excludeStaticFile: true,
             path: '/swagger' as Path,
-            exclude: []
+            exclude: [],
+            swaggerOptions: {}, 
         }
     ) =>
     (app: Elysia) => {
@@ -40,6 +42,22 @@ export const swagger =
         const pathWithPrefix = `${app.config.prefix}${path}`;
 
         app.get(path, () => {
+            const combinedSwaggerOptions = {                                                                                                     
+                url: '${pathWithPrefix}/json',
+                dom_id: '#swagger-ui',                                                                                                       
+                ...swaggerOptions                                                                                                              
+            }
+            const stringifiedSwaggerOptions = JSON.stringify(combinedSwaggerOptions, 
+                (key,value) => {
+                    if (typeof value == "function") {
+                        return undefined;
+                    }
+                    else {
+                        return value;
+                    }
+                }
+            )
+
             return new Response(
                 `<!DOCTYPE html>
 <html lang="en">
@@ -62,10 +80,7 @@ export const swagger =
     <script src="https://unpkg.com/swagger-ui-dist@${version}/swagger-ui-bundle.js" crossorigin></script>
     <script>
         window.onload = () => {
-            window.ui = SwaggerUIBundle({
-                url: '${pathWithPrefix}/json',
-                dom_id: '#swagger-ui',
-            });
+            window.ui = SwaggerUIBundle(${stringifiedSwaggerOptions});
         };
     </script>
 </body>

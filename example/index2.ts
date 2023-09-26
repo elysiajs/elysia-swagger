@@ -10,13 +10,16 @@ const app = new Elysia({
             documentation: {
                 info: {
                     title: 'Elysia',
-                    version: '0.7.0'
+                    version: '0.6.10'
                 },
                 tags: [
                     {
                         name: 'Test',
                         description: 'Hello'
                     }
+                ],
+                security: [
+                    {JwtAuth: []}
                 ],
                 components: {
                     schemas: {

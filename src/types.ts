@@ -1,4 +1,5 @@
 import type { OpenAPIV3 } from 'openapi-types'
+import  {SwaggerUIOptions} from 'swagger-ui'
 
 export interface ElysiaSwaggerConfig<Path extends string = '/swagger'> {
     /**
@@ -37,4 +38,15 @@ export interface ElysiaSwaggerConfig<Path extends string = '/swagger'> {
      * @default []
      */
     exclude?: string | RegExp | (string | RegExp)[]
+    /**
+     * Options to send to SwaggerUIBundle
+     * Currently, options that are defined as functions such as requestInterceptor
+     * and onComplete are not supported. 
+     */
+    swaggerOptions?: Omit<Partial<SwaggerUIOptions>, 
+                     'dom_id'|'dom_node'|'spec'|'url'|'urls' 
+                     |'layout' | 'pluginsOptions' | 'plugins'|'presets'
+                     |'onComplete' |'requestInterceptor'|'responseInterceptor'
+                     |'modelPropertyMacro'|'parameterMacro'
+                     >   
 }

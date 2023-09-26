@@ -66,6 +66,23 @@ describe('Swagger', () => {
         expect(res.status).toBe(200)
     })
 
+    it('Swagger UI options', async () => {
+        const app = new Elysia().use(
+            swagger({
+                swaggerOptions: {
+                    persistAuthorization: true
+                }
+            })
+        )
+        const res = await app.handle(req('/swagger')).then((x) => x.text())
+        const expected = `
+        window.onload = () => {
+            window.ui = SwaggerUIBundle({"url":"/swagger/json","dom_id":"#swagger-ui","persistAuthorization":true});
+        };
+        `
+        expect(res.trim().includes(expected.trim())).toBe(true)
+    })
+
     it('should not return content response when using Void type', async () => {
         const app = new Elysia().use(
             swagger())
