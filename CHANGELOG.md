@@ -1,3 +1,16 @@
+# 0.7.3 - 26 Sep 2023
+Feature:
+- [#19](https://github.com/elysiajs/elysia-swagger/pull/19) feat: handle nullish response types
+- [#18](https://github.com/elysiajs/elysia-swagger/pull/18) swagger ui options 
+
+
+Improvement:
+- [#23](https://github.com/elysiajs/elysia-swagger/pull/23) Add github action to run bun test
+- remove `removeComment` from tsconfig to show JSDoc
+
+Bug fix:
+- [#16](https://github.com/elysiajs/elysia-swagger/pull/16) fix: use global prefix
+
 # 0.7.2 - 21 Sep 2023
 Bug fix:
 - Paths is undefined

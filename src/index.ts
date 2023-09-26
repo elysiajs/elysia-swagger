@@ -18,14 +18,14 @@ export const swagger =
             excludeStaticFile = true,
             path = '/swagger' as Path,
             exclude = [],
-            swaggerOptions = {}, 
+            swaggerOptions = {}
         }: ElysiaSwaggerConfig<Path> = {
             documentation: {},
             version: '4.18.2',
             excludeStaticFile: true,
             path: '/swagger' as Path,
             exclude: [],
-            swaggerOptions: {}, 
+            swaggerOptions: {}
         }
     ) =>
     (app: Elysia) => {
@@ -34,26 +34,26 @@ export const swagger =
 
         const info = {
             title: 'Elysia Documentation',
-            description: 'Developement documentation',
+            description: 'Development documentation',
             version: '0.0.0',
             ...documentation.info
         }
 
-        const pathWithPrefix = `${app.config.prefix}${path}`;
+        const pathWithPrefix = `${app.config.prefix}${path}`
 
         app.get(path, () => {
-            const combinedSwaggerOptions = {                                                                                                     
-                url: '${pathWithPrefix}/json',
-                dom_id: '#swagger-ui',                                                                                                       
-                ...swaggerOptions                                                                                                              
+            const combinedSwaggerOptions = {
+                url: `${pathWithPrefix}/json`,
+                dom_id: '#swagger-ui',
+                ...swaggerOptions
             }
-            const stringifiedSwaggerOptions = JSON.stringify(combinedSwaggerOptions, 
-                (key,value) => {
-                    if (typeof value == "function") {
-                        return undefined;
-                    }
-                    else {
-                        return value;
+            const stringifiedSwaggerOptions = JSON.stringify(
+                combinedSwaggerOptions,
+                (key, value) => {
+                    if (typeof value == 'function') {
+                        return undefined
+                    } else {
+                        return value
                     }
                 }
             )
@@ -92,8 +92,6 @@ export const swagger =
                 }
             )
         }).get(`${path}/json`, () => {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
             const routes = app.routes as InternalRoute[]
 
             if (routes.length !== totalRoutes) {
