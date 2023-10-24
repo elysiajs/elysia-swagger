@@ -24,11 +24,14 @@ export const mapProperties = (
 
     return Object.entries(schema?.properties ?? []).map(([key, value]) => ({
         // @ts-ignore
-        ...value,
+        schema: {
+            // @ts-ignore
+            ...value,
+            // @ts-ignore
+            type: value?.type,
+        },
         in: name,
         name: key,
-        // @ts-ignore
-        type: value?.type,
         // @ts-ignore
         required: schema!.required?.includes(key) ?? false
     }))
