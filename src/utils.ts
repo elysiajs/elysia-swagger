@@ -150,7 +150,7 @@ export const registerSchemaPath = ({
                         if(!models[value]) return
 
                         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                        const { type, properties, required, ...rest } = models[
+                        const { type, properties, required, additionalProperties: _, ...rest } = models[
                             value
                         ] as TSchema & {
                             type: string
@@ -188,7 +188,7 @@ export const registerSchemaPath = ({
         if(!(responseSchema in models)) return
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { type, properties, required, ...rest } = models[
+        const { type, properties, required, additionalProperties: _, ...rest } = models[
             responseSchema
         ] as TSchema & {
             type: string
@@ -286,6 +286,7 @@ export const filterPaths = (
                                     )
                             )
                             .map((x) => ({
+                                schema: { type: 'string' },
                                 in: 'path',
                                 name: x.slice(1, x.length - 1),
                                 schema: { type: "string" },

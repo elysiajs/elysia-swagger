@@ -15,7 +15,7 @@ export const swagger =
     <Path extends string = '/swagger'>(
         {
             documentation = {},
-            version = '5.7.2',
+            version = '5.9.0',
             excludeStaticFile = true,
             path = '/swagger' as Path,
             exclude = [],
@@ -24,7 +24,7 @@ export const swagger =
             autoDarkMode = true
         }: ElysiaSwaggerConfig<Path> = {
             documentation: {},
-            version: '5.7.2',
+            version: '5.9.0',
             excludeStaticFile: true,
             path: '/swagger' as Path,
             exclude: [],
@@ -148,7 +148,7 @@ export const swagger =
                     ...documentation,
                     info: {
                         title: 'Elysia Documentation',
-                        description: 'Developement documentation',
+                        description: 'Development documentation',
                         version: '0.0.0',
                         ...documentation.info
                     }
