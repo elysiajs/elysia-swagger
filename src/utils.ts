@@ -289,7 +289,6 @@ export const filterPaths = (
                                 schema: { type: 'string' },
                                 in: 'path',
                                 name: x.slice(1, x.length - 1),
-                                schema: { type: "string" },
                                 required: true
                             })),
                         ...schema.parameters
