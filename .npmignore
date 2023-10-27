@@ -12,6 +12,7 @@ jest.config.js
 nodemon.json
 
 example
+src
 tests
 test
 CHANGELOG.md
