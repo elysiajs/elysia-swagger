@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { HTTPMethod, LocalHook } from 'elysia'
 
 import { Kind, type TSchema } from '@sinclair/typebox'
