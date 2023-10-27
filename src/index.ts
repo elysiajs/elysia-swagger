@@ -136,7 +136,7 @@ export const swagger =
                         method: route.method,
                         path: route.path,
                         // @ts-ignore
-                        models: app.definitions.type,
+                        models: app.definitions?.type,
                         contentType: route.hooks.type
                     })
                 })
@@ -161,7 +161,7 @@ export const swagger =
                     ...documentation.components,
                     schemas: {
                         // @ts-ignore
-                        ...app.definitions.type,
+                        ...app.definitions?.type,
                         ...documentation.components?.schemas
                     }
                 }

@@ -22,19 +22,18 @@ export const mapProperties = (
         if (schema in models) schema = models[schema]
         else throw new Error(`Can't find model ${schema}`)
 
-    return Object.entries(schema?.properties ?? []).map(([key, value]) => ({
-        // @ts-ignore
-        schema: {
+    return Object.entries(schema?.properties ?? []).map(([key, value]) => {
+        const { type: valueType = undefined, ...rest } = value as any;
+        return {
             // @ts-ignore
-            ...value,
+            ...rest,
+            schema: { type: valueType },
+            in: name,
+            name: key,
             // @ts-ignore
-            type: value?.type,
-        },
-        in: name,
-        name: key,
-        // @ts-ignore
-        required: schema!.required?.includes(key) ?? false
-    }))
+            required: schema!.required?.includes(key) ?? false,
+        };
+    });
 }
 
 const mapTypesResponse = (
@@ -121,7 +120,7 @@ export const registerSchemaPath = ({
 
     if (typeof responseSchema === 'object') {
         if (Kind in responseSchema) {
-            const { type, properties, required, additionalProperties: _, ...rest } =
+            const { type, properties, required, additionalProperties, ...rest } =
                 responseSchema as typeof responseSchema & {
                     type: string
                     properties: Object
@@ -165,7 +164,7 @@ export const registerSchemaPath = ({
                             content: mapTypesResponse(contentTypes, value)
                         }
                     } else {
-                        const { type, properties, required, additionalProperties: _, ...rest } =
+                        const { type, properties, required, additionalProperties, ...rest } =
                             value as typeof value & {
                                 type: string
                                 properties: Object
@@ -290,6 +289,7 @@ export const filterPaths = (
                                 schema: { type: 'string' },
                                 in: 'path',
                                 name: x.slice(1, x.length - 1),
+                                schema: { type: "string" },
                                 required: true
                             })),
                         ...schema.parameters
