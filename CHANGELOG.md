@@ -1,3 +1,15 @@
+# 0.7.4 - 27 Oct 2023
+Improvement:
+- [#24](https://github.com/elysiajs/elysia-swagger/pull/24) - adding schema validity test
+
+Change:
+- [#48](https://github.com/elysiajs/elysia-swagger/pull/48) update Swagger UI to 4.9.0
+- [#36](https://github.com/elysiajs/elysia-swagger/pull/36 ) point to generated .d.ts instead of raw .ts
+
+Bug fix:
+- [#41](https://github.com/elysiajs/elysia-swagger/pull/41) parameters mapping, fix
+- [#43](https://github.com/elysiajs/elysia-swagger/pull/43) typo in default documentation
+
 # 0.7.3 - 26 Sep 2023
 Feature:
 - [#19](https://github.com/elysiajs/elysia-swagger/pull/19) feat: handle nullish response types
