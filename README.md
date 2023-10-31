@@ -8,7 +8,7 @@ bun add @elysiajs/swagger
 
 ## Example
 ```typescript
-import { Elysia } from 'elysia'
+import { Elysia, t } from 'elysia'
 import { swagger } from '@elysiajs/swagger'
 
 const app = new Elysia()
