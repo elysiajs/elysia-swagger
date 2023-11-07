@@ -65,7 +65,7 @@ export interface ElysiaSwaggerConfig<Path extends string = '/swagger'> {
      * Overrides version parameter if set
      * Default is https://unpkg.com/swagger-ui-dist@${version}/swagger-ui.css.
      */
-    theme?: string | { 
+    theme?: string | {
         light: string
         dark: string
     }
