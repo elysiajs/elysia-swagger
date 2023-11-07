@@ -37,6 +37,60 @@ describe('Swagger', () => {
         ).toBe(true)
     })
 
+
+    it('use custom swagger bundle url', async () => {
+        const app = new Elysia().use(
+            swagger({
+                customSwaggerUiBundleUrl: 'example.com/swagger-ui-bundle.js'
+            })
+        )
+
+        const res = await app.handle(req('/swagger')).then((x) => x.text())
+        expect(
+            res.includes(
+                'example.com/swagger-ui-bundle.js'
+            )
+        ).toBe(true)
+    })
+
+    it('use custom swagger css url - string', async () => {
+        const app = new Elysia().use(
+            swagger({
+                theme: 'example.com/swagger-ui.css'
+            })
+        )
+
+        const res = await app.handle(req('/swagger')).then((x) => x.text())
+        expect(
+            res.includes(
+                'example.com/swagger-ui.css'
+            )
+        ).toBe(true)
+    })
+
+    it('use custom swagger css url - dark and light', async () => {
+        const app = new Elysia().use(
+            swagger({
+                theme: {
+                    dark: 'example.com/dark/swagger-ui.css',
+                    light: 'example.com/light/swagger-ui.css',
+                }
+            })
+        )
+
+        const res = await app.handle(req('/swagger')).then((x) => x.text())
+        expect(
+            res.includes(
+                'example.com/dark/swagger-ui.css'
+            )
+        ).toBe(true)
+        expect(
+            res.includes(
+                'example.com/light/swagger-ui.css'
+            )
+        ).toBe(true)
+    })
+
     it('follow title and description', async () => {
         const app = new Elysia().use(
             swagger({

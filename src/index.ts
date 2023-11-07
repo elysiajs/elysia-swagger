@@ -20,7 +20,8 @@ export const swagger =
             path = '/swagger' as Path,
             exclude = [],
             swaggerOptions = {},
-            theme = `/swagger/dist/5.9.0/swagger-ui.css`,
+            theme = `https://unpkg.com/swagger-ui-dist@${version}/swagger-ui.css`,
+            customSwaggerUiBundleUrl = `https://unpkg.com/swagger-ui-dist@${version}/swagger-ui-bundle.js`,
             autoDarkMode = true
         }: ElysiaSwaggerConfig<Path> = {
             documentation: {},
@@ -36,9 +37,6 @@ export const swagger =
         const schema = {}
         let totalRoutes = 0
 
-        if (!version)
-            version = `/swagger/dist/5.9.0/swagger-ui.css`
-
         const info = {
             title: 'Elysia Documentation',
             description: 'Development documentation',
@@ -48,8 +46,8 @@ export const swagger =
 
         const pathWithPrefix = `${app.config.prefix}${path}`
 
-        app.get('/swagger/dist/5.9.0/swagger-ui.css', () => Bun.file('./static/5.9.0/swagger-ui.css'))
-        .get('/swagger/dist/5.9.0/swagger-ui-bundle.js', () => Bun.file('./static/5.9.0/swagger-ui-bundle.js'))
+        app.get('/swagger/swagger-ui.css', () => Bun.file('./takodachi.png'))
+        .get('/swagger/swagger-ui.css', () => Bun.file('./takodachi.png'))
         .get(path, () => {
             const combinedSwaggerOptions = {
                 url: `${pathWithPrefix}/json`,
@@ -66,6 +64,7 @@ export const swagger =
                     }
                 }
             )
+
 
             return new Response(
                 `<!DOCTYPE html>
@@ -111,7 +110,7 @@ export const swagger =
 </head>
 <body>
     <div id="swagger-ui"></div>
-    <script src="/swagger/dist/5.9.0/swagger-ui-bundle.js" crossorigin></script>
+    <script src="${customSwaggerUiBundleUrl}" crossorigin></script>
     <script>
         window.onload = () => {
             window.ui = SwaggerUIBundle(${stringifiedSwaggerOptions});

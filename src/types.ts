@@ -61,9 +61,11 @@ export interface ElysiaSwaggerConfig<Path extends string = '/swagger'> {
         | 'parameterMacro'
     >
     /**
-     * Custom Swagger CSS
+     * Url to custom swagger css.
+     * Overrides version parameter if set
+     * Default is https://unpkg.com/swagger-ui-dist@${version}/swagger-ui.css.
      */
-    theme?: string | {
+    theme?: string | { 
         light: string
         dark: string
     }
@@ -71,4 +73,11 @@ export interface ElysiaSwaggerConfig<Path extends string = '/swagger'> {
      * Using poor man dark mode 😭
      */
     autoDarkMode?: boolean
+
+    /**
+     * Url to custom swagger js bundle.
+     * Overrides version parameter if set
+     * Default is https://unpkg.com/swagger-ui-dist@${version}/swagger-ui-bundle.js
+     */
+    customSwaggerUiBundleUrl?: string
 }
