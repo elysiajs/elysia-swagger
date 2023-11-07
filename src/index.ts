@@ -37,6 +37,7 @@ export const swagger =
         const schema = {}
         let totalRoutes = 0
 
+        
         const info = {
             title: 'Elysia Documentation',
             description: 'Development documentation',
