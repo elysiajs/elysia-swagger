@@ -20,7 +20,7 @@ export const swagger =
             path = '/swagger' as Path,
             exclude = [],
             swaggerOptions = {},
-            theme = `https://unpkg.com/swagger-ui-dist@${version}/swagger-ui.css`,
+            theme = `/swagger/dist/5.9.0/swagger-ui.css`,
             autoDarkMode = true
         }: ElysiaSwaggerConfig<Path> = {
             documentation: {},
@@ -37,7 +37,7 @@ export const swagger =
         let totalRoutes = 0
 
         if (!version)
-            version = `https://unpkg.com/swagger-ui-dist@${version}/swagger-ui.css`
+            version = `/swagger/dist/5.9.0/swagger-ui.css`
 
         const info = {
             title: 'Elysia Documentation',
@@ -48,7 +48,9 @@ export const swagger =
 
         const pathWithPrefix = `${app.config.prefix}${path}`
 
-        app.get(path, () => {
+        app.get('/swagger/dist/5.9.0/swagger-ui.css', () => Bun.file('./static/5.9.0/swagger-ui.css'))
+        .get('/swagger/dist/5.9.0/swagger-ui-bundle.js', () => Bun.file('./static/5.9.0/swagger-ui-bundle.js'))
+        .get(path, () => {
             const combinedSwaggerOptions = {
                 url: `${pathWithPrefix}/json`,
                 dom_id: '#swagger-ui',
@@ -109,7 +111,7 @@ export const swagger =
 </head>
 <body>
     <div id="swagger-ui"></div>
-    <script src="https://unpkg.com/swagger-ui-dist@${version}/swagger-ui-bundle.js" crossorigin></script>
+    <script src="/swagger/dist/5.9.0/swagger-ui-bundle.js" crossorigin></script>
     <script>
         window.onload = () => {
             window.ui = SwaggerUIBundle(${stringifiedSwaggerOptions});
