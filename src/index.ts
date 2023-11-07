@@ -46,9 +46,7 @@ export const swagger =
 
         const pathWithPrefix = `${app.config.prefix}${path}`
 
-        app.get('/swagger/swagger-ui.css', () => Bun.file('./takodachi.png'))
-        .get('/swagger/swagger-ui.css', () => Bun.file('./takodachi.png'))
-        .get(path, () => {
+        app.get(path, () => {
             const combinedSwaggerOptions = {
                 url: `${pathWithPrefix}/json`,
                 dom_id: '#swagger-ui',
