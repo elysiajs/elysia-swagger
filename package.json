@@ -40,7 +40,7 @@
   "devDependencies": {
     "@apidevtools/swagger-parser": "^10.1.0",
     "@types/node": "^20.1.4",
-    "bun-types": "^0.7.0",
+    "bun-types": "^1.0.11",
     "elysia": "0.7.10",
     "eslint": "^8.40.0",
     "rimraf": "4.3",
