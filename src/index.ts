@@ -46,11 +46,11 @@ export const swagger =
             ...documentation.info
         }
 
-        const pathWithPrefix = `${app.config.prefix}${path}`
+        const relativePath = path.startsWith('/') ? path.slice(1) : path
 
         app.get(path, () => {
             const combinedSwaggerOptions = {
-                url: `${pathWithPrefix}/json`,
+                url: `${relativePath}/json`,
                 dom_id: '#swagger-ui',
                 ...swaggerOptions
             }
