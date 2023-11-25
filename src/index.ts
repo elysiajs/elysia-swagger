@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { type Elysia, type InternalRoute } from 'elysia'
 
 import { filterPaths, registerSchemaPath } from './utils'
@@ -14,30 +15,56 @@ export const swagger =
     <Path extends string = '/swagger'>(
         {
             documentation = {},
-            version = '4.18.2',
+            version = '5.9.0',
             excludeStaticFile = true,
             path = '/swagger' as Path,
-            exclude = []
+            exclude = [],
+            swaggerOptions = {},
+            theme = `https://unpkg.com/swagger-ui-dist@${version}/swagger-ui.css`,
+            autoDarkMode = true
         }: ElysiaSwaggerConfig<Path> = {
             documentation: {},
-            version: '4.18.2',
+            version: '5.9.0',
             excludeStaticFile: true,
             path: '/swagger' as Path,
-            exclude: []
+            exclude: [],
+            swaggerOptions: {},
+            autoDarkMode: true
         }
     ) =>
     (app: Elysia) => {
         const schema = {}
         let totalRoutes = 0
 
+        if (!version)
+            version = `https://unpkg.com/swagger-ui-dist@${version}/swagger-ui.css`
+
         const info = {
             title: 'Elysia Documentation',
-            description: 'Developement documentation',
+            description: 'Development documentation',
             version: '0.0.0',
             ...documentation.info
         }
 
+        const relativePath = path.startsWith('/') ? path.slice(1) : path
+
         app.get(path, () => {
+            const combinedSwaggerOptions = {
+                url: `${relativePath}/json`,
+                dom_id: '#swagger-ui',
+                ...swaggerOptions
+            }
+            const stringifiedSwaggerOptions = JSON.stringify(
+                combinedSwaggerOptions,
+                (key, value) => {
+                    if (typeof value == 'function') {
+                        return undefined
+                    } else {
+                        return value
+                    }
+                }
+            )
+
             return new Response(
                 `<!DOCTYPE html>
 <html lang="en">
@@ -53,17 +80,39 @@ export const swagger =
         name="og:description"
         content="${info.description}"
     />
-    <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@${version}/swagger-ui.css" />
+    ${
+        autoDarkMode && typeof theme === 'string'
+            ? `
+    <style>
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #222;
+                color: #faf9a;
+            }
+            .swagger-ui {
+                filter: invert(92%) hue-rotate(180deg);
+            }
+
+            .swagger-ui .microlight {
+                filter: invert(100%) hue-rotate(180deg);
+            }
+        }
+    </style>`
+            : ''
+    }
+    ${
+        typeof theme === 'string'
+            ? `<link rel="stylesheet" href="${theme}" />`
+            : `<link rel="stylesheet" media="(prefers-color-scheme: light)" href="${theme.light}" />
+<link rel="stylesheet" media="(prefers-color-scheme: dark)" href="${theme.dark}" />`
+    }
 </head>
 <body>
     <div id="swagger-ui"></div>
     <script src="https://unpkg.com/swagger-ui-dist@${version}/swagger-ui-bundle.js" crossorigin></script>
     <script>
         window.onload = () => {
-            window.ui = SwaggerUIBundle({
-                url: '${path}/json',
-                dom_id: '#swagger-ui',
-            });
+            window.ui = SwaggerUIBundle(${stringifiedSwaggerOptions});
         };
     </script>
 </body>
@@ -74,21 +123,20 @@ export const swagger =
                     }
                 }
             )
-        }).route('GET', `${path}/json`, () => {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
+        }).get(`${path}/json`, () => {
             const routes = app.routes as InternalRoute[]
 
             if (routes.length !== totalRoutes) {
                 totalRoutes = routes.length
 
-                routes.forEach((route: InternalRoute<any>) => {
+                routes.forEach((route: InternalRoute) => {
                     registerSchemaPath({
                         schema,
                         hook: route.hooks,
                         method: route.method,
                         path: route.path,
-                        models: app.meta.defs,
+                        // @ts-ignore
+                        models: app.definitions?.type,
                         contentType: route.hooks.type
                     })
                 })
@@ -100,7 +148,7 @@ export const swagger =
                     ...documentation,
                     info: {
                         title: 'Elysia Documentation',
-                        description: 'Developement documentation',
+                        description: 'Development documentation',
                         version: '0.0.0',
                         ...documentation.info
                     }
@@ -112,7 +160,8 @@ export const swagger =
                 components: {
                     ...documentation.components,
                     schemas: {
-                        ...app.meta.defs,
+                        // @ts-ignore
+                        ...app.definitions?.type,
                         ...documentation.components?.schemas
                     }
                 }

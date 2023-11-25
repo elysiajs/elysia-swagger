@@ -1,6 +1,6 @@
 {
   "name": "@elysiajs/swagger",
-  "version": "0.6.2",
+  "version": "0.7.4",
   "description": "Plugin for Elysia to auto-generate Swagger page",
   "author": {
     "name": "saltyAom",
@@ -15,7 +15,7 @@
     "import": "./dist/index.js",
     "default": "./dist/index.js"
   },
-  "types": "./src/index.ts",
+  "types": "./dist/index.d.ts",
   "keywords": [
     "elysia",
     "swagger"
@@ -35,18 +35,21 @@
     "release": "npm run build && npm run test && npm publish --access public"
   },
   "peerDependencies": {
-    "elysia": ">= 0.6.7"
+    "elysia": ">= 0.7.0"
   },
   "devDependencies": {
+    "@apidevtools/swagger-parser": "^10.1.0",
     "@types/node": "^20.1.4",
     "bun-types": "^0.7.0",
-    "elysia": "^0.6.20",
+    "elysia": "0.7.10",
     "eslint": "^8.40.0",
     "rimraf": "4.3",
     "typescript": "^5.0.4"
   },
   "dependencies": {
     "@types/lodash.clonedeep": "^4.5.7",
-    "lodash.clonedeep": "^4.5.0"
+    "@types/swagger-ui": "^3.52.2",
+    "lodash.clonedeep": "^4.5.0",
+    "openapi-types": "^12.1.3"
   }
 }

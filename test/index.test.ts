@@ -1,7 +1,9 @@
-import { Elysia } from 'elysia'
+import { Elysia, t } from 'elysia'
+import SwaggerParser from '@apidevtools/swagger-parser';
 import { swagger } from '../src'
 
 import { describe, expect, it } from 'bun:test'
+import { fail } from 'assert';
 
 const req = (path: string) => new Request(`http://localhost${path}`)
 
@@ -12,6 +14,13 @@ describe('Swagger', () => {
         const res = await app.handle(req('/swagger'))
         expect(res.status).toBe(200)
     })
+
+    it('returns a valid Swagger/OpenAPI json config', async () => {
+        const app = new Elysia().use(swagger())
+        const res = await app.handle(req('/swagger/json')).then((x) => x.json());
+        expect(res.openapi).toBe("3.0.3");
+        await SwaggerParser.validate(res).catch((err) => fail(err));
+    });
 
     it('use custom Swagger version', async () => {
         const app = new Elysia().use(
@@ -64,5 +73,84 @@ describe('Swagger', () => {
 
         const res = await app.handle(req('/v2/swagger'))
         expect(res.status).toBe(200)
+
+        const resJson = await app.handle(req('/v2/swagger/json'))
+        expect(resJson.status).toBe(200)
+    })
+
+    it('Swagger UI options', async () => {
+        const app = new Elysia().use(
+            swagger({
+                swaggerOptions: {
+                    persistAuthorization: true
+                }
+            })
+        )
+        const res = await app.handle(req('/swagger')).then((x) => x.text())
+        const expected = `"persistAuthorization":true`
+
+        expect(res.trim().includes(expected.trim())).toBe(true)
+    })
+
+    it('should not return content response when using Void type', async () => {
+        const app = new Elysia().use(swagger()).get('/void', () => {}, {
+            response: {
+                204: t.Void({
+                    description: 'Void response'
+                })
+            }
+        })
+
+        const res = await app.handle(req('/swagger/json'))
+        expect(res.status).toBe(200)
+        const response = await res.json()
+        expect(response.paths['/void'].get.responses['204'].description).toBe(
+            'Void response'
+        )
+        expect(
+            response.paths['/void'].get.responses['204'].content
+        ).toBeUndefined()
+    })
+
+    it('should not return content response when using Undefined type', async () => {
+        const app = new Elysia()
+            .use(swagger())
+            .get('/undefined', () => undefined, {
+                response: {
+                    204: t.Undefined({
+                        description: 'Undefined response'
+                    })
+                }
+            })
+
+        const res = await app.handle(req('/swagger/json'))
+        expect(res.status).toBe(200)
+        const response = await res.json()
+        expect(
+            response.paths['/undefined'].get.responses['204'].description
+        ).toBe('Undefined response')
+        expect(
+            response.paths['/undefined'].get.responses['204'].content
+        ).toBeUndefined()
+    })
+
+    it('should not return content response when using Null type', async () => {
+        const app = new Elysia().use(swagger()).get('/null', () => null, {
+            response: {
+                204: t.Null({
+                    description: 'Null response'
+                })
+            }
+        })
+
+        const res = await app.handle(req('/swagger/json'))
+        expect(res.status).toBe(200)
+        const response = await res.json()
+        expect(response.paths['/null'].get.responses['204'].description).toBe(
+            'Null response'
+        )
+        expect(
+            response.paths['/null'].get.responses['204'].content
+        ).toBeUndefined()
     })
 })
