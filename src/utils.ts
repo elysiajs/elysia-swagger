@@ -112,13 +112,18 @@ export const registerSchemaPath = ({
         code: string,
         { description, ...schema }: TAnySchema,
     ) => {
+        const ignore = ['Undefined', 'Null', 'Void'].includes(schema[Kind]);
+
         responseSchema[code] = {
             description: description as string,
-            content: mapTypesResponse(contentTypes, schema),
+            content: ignore
+                ? undefined
+                : mapTypesResponse(contentTypes, schema),
         };
     };
 
     const userProvidedResponseSchema = hook?.response;
+
     if (typeof userProvidedResponseSchema === 'object') {
         if (Kind in userProvidedResponseSchema) {
             addToResponseSchema('200', userProvidedResponseSchema);
