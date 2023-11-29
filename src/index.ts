@@ -22,7 +22,7 @@ export const swagger =
             swaggerOptions = {},
             theme = `https://unpkg.com/swagger-ui-dist@${version}/swagger-ui.css`,
             autoDarkMode = true,
-            excludeOptions = true
+            excludeMethods = ['OPTIONS']
         }: ElysiaSwaggerConfig<Path> = {
             documentation: {},
             version: '5.9.0',
@@ -31,7 +31,7 @@ export const swagger =
             exclude: [],
             swaggerOptions: {},
             autoDarkMode: true,
-            excludeOptions: true
+            excludeMethods: ['OPTIONS']
         }
     ) =>
     (app: Elysia) => {
@@ -132,7 +132,7 @@ export const swagger =
                 totalRoutes = routes.length
 
                 routes.forEach((route: InternalRoute) => {
-                    if (excludeOptions && route.method === 'OPTIONS') return
+                    if (excludeMethods.includes(route.method)) return
                     
                     registerSchemaPath({
                         schema,

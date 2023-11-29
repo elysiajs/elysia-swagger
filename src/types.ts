@@ -73,7 +73,7 @@ export interface ElysiaSwaggerConfig<Path extends string = '/swagger'> {
     autoDarkMode?: boolean
 
     /**
-     * Exclude OPTIONS method from Swagger
+     * Exclude methods from Swagger
      */
-    excludeOptions?: boolean
+    excludeMethods?: string[]
 }
