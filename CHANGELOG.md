@@ -1,3 +1,7 @@
+# 0.7.5 
+Improvement:
+- #[59](https://github.com/elysiajs/elysia-swagger/pull/59) use relative path to swagger json #59 
+
 # 0.7.4 - 27 Oct 2023
 Improvement:
 - [#24](https://github.com/elysiajs/elysia-swagger/pull/24) - adding schema validity test
