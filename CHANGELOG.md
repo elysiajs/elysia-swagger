@@ -1,3 +1,8 @@
+
+# 0.8.0-rc.0 - 15 Dec 2023
+Change:
+- Add support for Elysia 0.8
+
 # 0.7.5 
 Improvement:
 - #[59](https://github.com/elysiajs/elysia-swagger/pull/59) use relative path to swagger json #59 
