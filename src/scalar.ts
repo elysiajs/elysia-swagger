@@ -1,6 +1,7 @@
+import type { ReferenceConfiguration } from '@scalar/api-reference'
 import scalarElysiaTheme from './scalar-elysia-theme'
 
-export const ScalarRender = (specUrl: string, version: string, customCss?: string) => `<!doctype html>
+export const ScalarRender = (version: string, config: ReferenceConfiguration) => `<!doctype html>
 <html>
   <head>
     <title>API Reference</title>
@@ -14,13 +15,13 @@ export const ScalarRender = (specUrl: string, version: string, customCss?: strin
       }
     </style>
     <style>
-      ${customCss ?? scalarElysiaTheme}
+      ${config.customCss ?? scalarElysiaTheme}
     </style>
   </head>
   <body>
     <script
       id="api-reference"
-      data-url="${specUrl}"></script>
+      data-url="${config.spec?.url}"></script>
     <script src="https://cdn.jsdelivr.net/npm/@scalar/api-reference@${version}/dist/browser/standalone.min.js"></script>
   </body>
 </html>`

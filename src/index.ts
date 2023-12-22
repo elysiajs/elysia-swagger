@@ -4,6 +4,7 @@ import { type Elysia, type InternalRoute } from 'elysia'
 import { filterPaths, registerSchemaPath } from './utils'
 
 import type { OpenAPIV3 } from 'openapi-types'
+import type { ReferenceConfiguration } from '@scalar/api-reference'
 import type { ElysiaSwaggerConfig } from './types'
 import { SwaggerUIRender } from './swagger-ui'
 import { ScalarRender } from './scalar'
@@ -18,6 +19,7 @@ export const swagger =
         {
             provider = 'scalar',
             scalarVersion = '1.12.5',
+            scalarConfig = {},
             documentation = {},
             version = '5.9.0',
             excludeStaticFile = true,
@@ -29,6 +31,7 @@ export const swagger =
         }: ElysiaSwaggerConfig<Path> = {
             provider: 'scalar',
             scalarVersion: '1.12.5',
+            scalarConfig: {},
             documentation: {},
             version: '5.9.0',
             excludeStaticFile: true,
@@ -71,8 +74,15 @@ export const swagger =
                 }
             )
 
+            const scalarConfiguration: ReferenceConfiguration = {
+                spec: {
+                    url: `${relativePath}/json`
+                },
+                ...scalarConfig
+            }
 
-            return new Response(provider === 'swagger-ui' ? SwaggerUIRender(info, version, theme, stringifiedSwaggerOptions, autoDarkMode) : ScalarRender(`${relativePath}/json`, scalarVersion),
+
+            return new Response(provider === 'swagger-ui' ? SwaggerUIRender(info, version, theme, stringifiedSwaggerOptions, autoDarkMode) : ScalarRender(scalarVersion, scalarConfiguration),
                 {
                     headers: {
                         'content-type': 'text/html; charset=utf8'
