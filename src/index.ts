@@ -17,7 +17,7 @@ export const swagger =
     <Path extends string = '/swagger'>(
         {
             provider = 'scalar',
-            scalarVersion = '1.12.4',
+            scalarVersion = '1.12.5',
             documentation = {},
             version = '5.9.0',
             excludeStaticFile = true,
@@ -28,7 +28,7 @@ export const swagger =
             autoDarkMode = true
         }: ElysiaSwaggerConfig<Path> = {
             provider: 'scalar',
-            scalarVersion: '1.12.4',
+            scalarVersion: '1.12.5',
             documentation: {},
             version: '5.9.0',
             excludeStaticFile: true,
