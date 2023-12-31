@@ -21,6 +21,7 @@ export const swagger =
             exclude = [],
             swaggerOptions = {},
             theme = `https://unpkg.com/swagger-ui-dist@${version}/swagger-ui.css`,
+            customSwaggerUiBundleUrl = `https://unpkg.com/swagger-ui-dist@${version}/swagger-ui-bundle.js`,
             autoDarkMode = true
         }: ElysiaSwaggerConfig<Path> = {
             documentation: {},
@@ -35,9 +36,6 @@ export const swagger =
     (app: Elysia) => {
         const schema = {}
         let totalRoutes = 0
-
-        if (!version)
-            version = `https://unpkg.com/swagger-ui-dist@${version}/swagger-ui.css`
 
         const info = {
             title: 'Elysia Documentation',
@@ -109,7 +107,7 @@ export const swagger =
 </head>
 <body>
     <div id="swagger-ui"></div>
-    <script src="https://unpkg.com/swagger-ui-dist@${version}/swagger-ui-bundle.js" crossorigin></script>
+    <script src="${customSwaggerUiBundleUrl}" crossorigin></script>
     <script>
         window.onload = () => {
             window.ui = SwaggerUIBundle(${stringifiedSwaggerOptions});
