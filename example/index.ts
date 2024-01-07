@@ -9,7 +9,7 @@ const app = new Elysia({
         swagger({
             documentation: {
                 info: {
-                    title: 'Elysia Swagger',
+                    title: 'Elysia Scalar',
                     version: '0.8.1'
                 },
                 tags: [

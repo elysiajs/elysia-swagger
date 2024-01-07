@@ -81,6 +81,7 @@ export const plugin = new Elysia({
     //     }
     // )
     .post('/file', ({ body: { file } }) => file, {
+        type: 'formdata',
         body: t.Object({
             file: t.File({
                 type: ['image/jpeg', 'image/'],
