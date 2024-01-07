@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { type Elysia, type InternalRoute } from 'elysia'
 
+import { SwaggerUIRender } from './swagger-ui'
+import { ScalarRender } from './scalar'
+
 import { filterPaths, registerSchemaPath } from './utils'
 
 import type { OpenAPIV3 } from 'openapi-types'
 import type { ReferenceConfiguration } from '@scalar/api-reference'
 import type { ElysiaSwaggerConfig } from './types'
-import { SwaggerUIRender } from './swagger-ui'
-import { ScalarRender } from './scalar'
 
 /**
  * Plugin for [elysia](https://github.com/elysiajs/elysia) that auto-generate Swagger page.
@@ -81,8 +82,16 @@ export const swagger =
                 ...scalarConfig
             }
 
-
-            return new Response(provider === 'swagger-ui' ? SwaggerUIRender(info, version, theme, stringifiedSwaggerOptions, autoDarkMode) : ScalarRender(scalarVersion, scalarConfiguration),
+            return new Response(
+                provider === 'swagger-ui'
+                    ? SwaggerUIRender(
+                          info,
+                          version,
+                          theme,
+                          stringifiedSwaggerOptions,
+                          autoDarkMode
+                      )
+                    : ScalarRender(scalarVersion, scalarConfiguration),
                 {
                     headers: {
                         'content-type': 'text/html; charset=utf8'

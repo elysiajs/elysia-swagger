@@ -43,4 +43,4 @@ const app = new Elysia({
         })
     )
     .use(plugin)
-    .listen(8080)
+    .listen(3000)

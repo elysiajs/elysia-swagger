@@ -9,8 +9,8 @@ const app = new Elysia({
         swagger({
             documentation: {
                 info: {
-                    title: 'Elysia',
-                    version: '0.7.0'
+                    title: 'Elysia Swagger',
+                    version: '0.8.1'
                 },
                 tags: [
                     {
@@ -36,8 +36,8 @@ const app = new Elysia({
             },
             swaggerOptions: {
                 persistAuthorization: true
-            },
+            }
         })
     )
     .use(plugin)
-    .listen(8080)
+    .listen(3000)
