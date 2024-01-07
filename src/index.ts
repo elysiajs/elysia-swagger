@@ -108,7 +108,7 @@ export const swagger =
 
                 routes.forEach((route: InternalRoute) => {
                     if (excludeMethods.includes(route.method)) return
-                    
+
                     registerSchemaPath({
                         schema,
                         hook: route.hooks,

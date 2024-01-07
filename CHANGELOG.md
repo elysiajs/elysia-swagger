@@ -1,3 +1,6 @@
+# 0.8.1 - 7 Jan 2023
+Change:
+- Using Scalar provider as new default
 
 # 0.8.0-rc.0 - 15 Dec 2023
 Change:
