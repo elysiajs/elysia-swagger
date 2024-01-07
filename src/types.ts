@@ -100,4 +100,9 @@ export interface ElysiaSwaggerConfig<Path extends string = '/swagger'> {
      * Using poor man dark mode 😭
      */
     autoDarkMode?: boolean
+
+    /**
+     * Exclude methods from Swagger
+     */
+    excludeMethods?: string[]
 }
