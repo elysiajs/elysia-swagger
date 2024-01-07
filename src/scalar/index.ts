@@ -1,5 +1,5 @@
-import type { ReferenceConfiguration } from '@scalar/api-reference'
-import scalarElysiaTheme from './scalar-elysia-theme'
+import scalarElysiaTheme from './theme'
+import type { ReferenceConfiguration } from './types'
 
 export const ScalarRender = (version: string, config: ReferenceConfiguration) => `<!doctype html>
 <html>

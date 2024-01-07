@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { type Elysia, type InternalRoute } from 'elysia'
 
-import { SwaggerUIRender } from './swagger-ui'
+import { SwaggerUIRender } from './swagger'
 import { ScalarRender } from './scalar'
 
 import { filterPaths, registerSchemaPath } from './utils'

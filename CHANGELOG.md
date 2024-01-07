@@ -1,3 +1,7 @@
+# 0.8.2 - 8 Jan 2023
+Improvement:
+- Extract type inference to reduce bundle-size
+
 # 0.8.1 - 7 Jan 2023
 Change:
 - Using Scalar provider as new default
