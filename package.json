@@ -47,6 +47,7 @@
         "typescript": "^5.0.4"
     },
     "dependencies": {
+        "@scalar/api-reference": "^1.12.5",
         "@types/lodash.clonedeep": "^4.5.7",
         "@types/swagger-ui": "^3.52.2",
         "lodash.clonedeep": "^4.5.0",

@@ -47,6 +47,13 @@ Then go to `http://localhost:8080/swagger`.
 
 # config
 
+## provider
+@default 'scalar'
+Choose between [Scalar](https://swagger.io/specification/v2/) & [SwaggerUI](https://github.com/swagger-api/swagger-ui)
+
+## scalar
+Customize scalarConfig, refers to [Scalar config](https://github.com/scalar/scalar)
+
 ## swagger
 Customize Swagger config, refers to [Swagger 2.0 config](https://swagger.io/specification/v2/)
 

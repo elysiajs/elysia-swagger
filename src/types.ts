@@ -1,5 +1,12 @@
 import type { OpenAPIV3 } from 'openapi-types'
 import type { SwaggerUIOptions } from 'swagger-ui'
+import type { ReferenceConfiguration } from '@scalar/api-reference'
+
+export type SwaggerInfo = {
+    title: string
+    description: string
+    version: string
+}
 
 export interface ElysiaSwaggerConfig<Path extends string = '/swagger'> {
     /**
@@ -12,6 +19,28 @@ export interface ElysiaSwaggerConfig<Path extends string = '/swagger'> {
         | 'x-express-openapi-additional-middleware'
         | 'x-express-openapi-validation-strict'
     >
+    /**
+     * Choose your provider, Scalar or Swagger UI
+     *
+     * @default 'scalar'
+     * @see https://github.com/scalar/scalar
+     * @see https://github.com/swagger-api/swagger-ui
+     */
+    provider?: 'scalar' | 'swagger-ui'
+    /**
+     * Version to use for Scalar cdn bundle
+     *
+     * @default '1.12.5'
+     * @see https://github.com/scalar/scalar
+     */
+    scalarVersion?: string
+    /**
+     * Scalar configuration to customize scalar
+     *
+     * @default '1.12.5'
+     * @see https://github.com/scalar/scalar
+     */
+    scalarConfig?: ReferenceConfiguration
     /**
      * Version to use for swagger cdn bundle
      *
