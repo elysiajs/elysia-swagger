@@ -1,3 +1,7 @@
+# 0.8.3 - 8 Jan 2023
+Bug fix:
+- Using local Scalar API reference instead of leftover one (oppsie 👉👈)
+
 # 0.8.2 - 8 Jan 2023
 Improvement:
 - Extract type inference to reduce bundle-size
