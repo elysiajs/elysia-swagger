@@ -80,11 +80,6 @@ export interface SwaggerUIOptions {
      */
     dom_id?: string | undefined
     /**
-     *  REQUIRED if dom_id is not provided. The HTML DOM element inside which SwaggerUI will put its user interface. Overrides dom_id.
-     */
-    // @ts-ignore
-    domNode?: HTMLElement | null | undefined
-    /**
      * A JavaScript object describing the OpenAPI definition. When used, the url parameter will not be parsed. This is useful for testing manually-generated definitions without hosting them
      */
     spec?: { [propName: string]: any } | undefined
