@@ -1,9 +1,9 @@
 import { Elysia, t } from 'elysia'
-import SwaggerParser from '@apidevtools/swagger-parser';
+import SwaggerParser from '@apidevtools/swagger-parser'
 import { swagger } from '../src'
 
 import { describe, expect, it } from 'bun:test'
-import { fail } from 'assert';
+import { fail } from 'assert'
 
 const req = (path: string) => new Request(`http://localhost${path}`)
 
@@ -17,14 +17,15 @@ describe('Swagger', () => {
 
     it('returns a valid Swagger/OpenAPI json config', async () => {
         const app = new Elysia().use(swagger())
-        const res = await app.handle(req('/swagger/json')).then((x) => x.json());
-        expect(res.openapi).toBe("3.0.3");
-        await SwaggerParser.validate(res).catch((err) => fail(err));
-    });
+        const res = await app.handle(req('/swagger/json')).then((x) => x.json())
+        expect(res.openapi).toBe('3.0.3')
+        await SwaggerParser.validate(res).catch((err) => fail(err))
+    })
 
     it('use custom Swagger version', async () => {
         const app = new Elysia().use(
             swagger({
+                provider: 'swagger-ui',
                 version: '4.5.0'
             })
         )
@@ -41,6 +42,7 @@ describe('Swagger', () => {
         const app = new Elysia().use(
             swagger({
                 version: '4.5.0',
+                provider: 'swagger-ui',
                 documentation: {
                     info: {
                         title: 'Elysia Documentation',
@@ -81,6 +83,7 @@ describe('Swagger', () => {
     it('Swagger UI options', async () => {
         const app = new Elysia().use(
             swagger({
+                provider: 'swagger-ui',
                 swaggerOptions: {
                     persistAuthorization: true
                 }
