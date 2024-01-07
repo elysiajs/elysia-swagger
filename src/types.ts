@@ -1,6 +1,6 @@
 import type { OpenAPIV3 } from 'openapi-types'
-import type { SwaggerUIOptions } from 'swagger-ui'
 import type { ReferenceConfiguration } from '@scalar/api-reference'
+import type { SwaggerUIOptions } from './swagger-ui'
 
 export type SwaggerInfo = {
     title: string
