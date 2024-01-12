@@ -19,7 +19,7 @@ export const swagger =
     <Path extends string = '/swagger'>(
         {
             provider = 'scalar',
-            scalarVersion = '1.12.5',
+            scalarVersion = '1.13.0',
             scalarConfig = {},
             documentation = {},
             version = '5.9.0',
