@@ -22,7 +22,6 @@ export const ScalarRender = (version: string, config: ReferenceConfiguration, cd
     <script
       id="api-reference"
       data-url="${config.spec?.url}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@scalar/api-reference@${version}/dist/browser/standalone.min.js"></script>
     <script src="${cdn ? cdn:`https://cdn.jsdelivr.net/npm/@scalar/api-reference@${version}/dist/browser/standalone.min.js`}"></script>
 
   </body>
