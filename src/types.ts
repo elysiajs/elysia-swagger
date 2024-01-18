@@ -29,17 +29,20 @@ export interface ElysiaSwaggerConfig<Path extends string = '/swagger'> {
      */
     scalarVersion?: string
     /**
-     * Version to use for Scalar cdn bundle
+     * Custom URL or path to locally hosted Scalar bundle 
      *
-     * @default '1.12.5'
-     * @see https://github.com/scalar/scalar
+     * Lease blank to use default jsdeliver.net CDN
+     *
+     * @default ''
+     * @example 'https://unpkg.com/@scalar/api-reference@1.13.10/dist/browser/standalone.js'
+     * @example '/public/standalone.js'
      */
     scalarCDN?: string
     /**
-     * Scalar CDN bundle url
+     * Scalar configuration to customize scalar
      *
-     * @default ''
-     * @example 'https://cdn.jsdelivr.net/npm/@scalar/api-reference@$1.12.5/dist/browser/standalone.min.js'
+     * @default '1.12.5'
+     * @see https://github.com/scalar/scalar
      */
     scalarConfig?: ReferenceConfiguration
     /**
