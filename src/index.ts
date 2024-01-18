@@ -20,6 +20,7 @@ export const swagger =
         {
             provider = 'scalar',
             scalarVersion = '1.12.5',
+            scalarCDN = "",
             scalarConfig = {},
             documentation = {},
             version = '5.9.0',
@@ -33,6 +34,7 @@ export const swagger =
         }: ElysiaSwaggerConfig<Path> = {
             provider: 'scalar',
             scalarVersion: '1.12.5',
+            scalarCDN: "",
             scalarConfig: {},
             documentation: {},
             version: '5.9.0',
