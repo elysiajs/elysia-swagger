@@ -95,7 +95,7 @@ export const swagger =
                           stringifiedSwaggerOptions,
                           autoDarkMode
                       )
-                    : ScalarRender(scalarVersion, scalarConfiguration),
+                    : ScalarRender(scalarVersion, scalarConfiguration, scalarCDN),
                 {
                     headers: {
                         'content-type': 'text/html; charset=utf8'
