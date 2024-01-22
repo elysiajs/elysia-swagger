@@ -24,14 +24,20 @@ export interface ElysiaSwaggerConfig<Path extends string = '/swagger'> {
     /**
      * Version to use for Scalar cdn bundle
      *
-     * @default '1.12.5'
+     * @default 'latest'
      * @see https://github.com/scalar/scalar
      */
     scalarVersion?: string
     /**
-     * Scalar configuration to customize scalar
+     * Optional override to specifying the path for the Scalar bundle
      *
-     * @default '1.12.5'
+     * @default ''
+     * @see https://github.com/scalar/scalar
+     */
+    scalarCDN?: string
+    /**
+     * Scalar configuration to customize scalar
+     *'
      * @see https://github.com/scalar/scalar
      */
     scalarConfig?: ReferenceConfiguration
