@@ -1,12 +1,18 @@
-# 0.8.3 - 8 Jan 2023
+# 0.8.4 - 24 Jan 2024
+Feature:
+- [#96](https://github.com/elysiajs/elysia-swagger/pull/96) move to scalar configuration prop
+- [#95](https://github.com/elysiajs/elysia-swagger/pulls?q=is%3Apr+is%3Aclosed) Scalar CDN option
+- [#92](https://github.com/elysiajs/elysia-swagger/pull/92) update scalar to 1.13.0 and using latest instead of hardcoded version
+
+# 0.8.3 - 8 Jan 2024
 Bug fix:
 - Using local Scalar API reference instead of leftover one (oppsie 👉👈)
 
-# 0.8.2 - 8 Jan 2023
+# 0.8.2 - 8 Jan 2024
 Improvement:
 - Extract type inference to reduce bundle-size
 
-# 0.8.1 - 7 Jan 2023
+# 0.8.1 - 7 Jan 2024
 Change:
 - Using Scalar provider as new default
 

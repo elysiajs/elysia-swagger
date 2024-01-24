@@ -2,9 +2,7 @@ import { Elysia } from 'elysia'
 import { swagger } from '../src/index'
 import { plugin } from './plugin'
 
-const app = new Elysia({
-    // aot: false
-})
+const app = new Elysia()
     .use(
         swagger({
             documentation: {
