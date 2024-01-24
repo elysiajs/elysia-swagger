@@ -19,8 +19,8 @@ export const swagger =
     <Path extends string = '/swagger'>(
         {
             provider = 'scalar',
-            scalarVersion = '1.12.5',
-            scalarCDN = "",
+            scalarVersion = 'latest',
+            scalarCDN = '',
             scalarConfig = {},
             documentation = {},
             version = '5.9.0',
@@ -33,8 +33,8 @@ export const swagger =
             excludeMethods = ['OPTIONS']
         }: ElysiaSwaggerConfig<Path> = {
             provider: 'scalar',
-            scalarVersion: '1.12.5',
-            scalarCDN: "",
+            scalarVersion: 'latest',
+            scalarCDN: '',
             scalarConfig: {},
             documentation: {},
             version: '5.9.0',
