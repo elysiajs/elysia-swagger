@@ -42,44 +42,40 @@ export const plugin = new Elysia({
             summary: 'Using reference model'
         }
     })
-    // .post(
-    //     '/json/:id',
-    //     ({ body, params: { id }, query: { name } }) => ({
-    //         ...body,
-    //         id
-    //     }),
-    //     {
-    //         transform({ params }) {
-    //             params.id = +params.id
-    //         },
-    //         schema: {
-    //             body: 'sign',
-    //             params: t.Object({
-    //                 id: t.Number()
-    //             }),
-    //             response: {
-    //                 200: t.Object(
-    //                     {
-    //                         id: t.Number(),
-    //                         username: t.String(),
-    //                         password: t.String()
-    //                     },
-    //                     {
-    //                         title: 'User',
-    //                         description:
-    //                             "Contains user's confidential metadata"
-    //                     }
-    //                 ),
-    //                 400: t.Object({
-    //                     error: t.String()
-    //                 })
-    //             },
-    //             detail: {
-    //                 summary: 'Transform path parameter'
-    //             }
-    //         }
-    //     }
-    // )
+    .post(
+        '/json/:id',
+        ({ body, params: { id }, query: { name } }) => ({
+            ...body,
+            id
+        }),
+        {
+            body: 'sign',
+            params: t.Object({
+                id: t.Numeric()
+            }),
+            response: {
+                200: t.Object(
+                    {
+                        id: t.Number(),
+                        username: t.String(),
+                        password: t.String()
+                    },
+                    {
+                        title: 'User',
+                        description: "Contains user's confidential metadata"
+                    }
+                ),
+                418: t.Array(
+                    t.Object({
+                        error: t.String()
+                    })
+                ),
+            },
+            detail: {
+                summary: 'Complex JSON'
+            }
+        }
+    )
     .post('/file', ({ body: { file } }) => file, {
         type: 'formdata',
         body: t.Object({

@@ -1,6 +1,6 @@
 {
   "name": "@elysiajs/swagger",
-  "version": "0.8.4",
+  "version": "0.8.5",
   "description": "Plugin for Elysia to auto-generate Swagger page",
   "author": {
     "name": "saltyAom",

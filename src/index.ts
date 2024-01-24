@@ -62,92 +62,102 @@ export const swagger =
 
         const relativePath = path.startsWith('/') ? path.slice(1) : path
 
-        app.get(path, () => {
-            const combinedSwaggerOptions = {
-                url: `${relativePath}/json`,
-                dom_id: '#swagger-ui',
-                ...swaggerOptions
-            }
-            const stringifiedSwaggerOptions = JSON.stringify(
-                combinedSwaggerOptions,
-                (key, value) => {
-                    if (typeof value == 'function') {
-                        return undefined
-                    } else {
+        app.get(
+            path,
+            (() => {
+                const combinedSwaggerOptions = {
+                    url: `${relativePath}/json`,
+                    dom_id: '#swagger-ui',
+                    ...swaggerOptions
+                }
+
+                const stringifiedSwaggerOptions = JSON.stringify(
+                    combinedSwaggerOptions,
+                    (key, value) => {
+                        if (typeof value == 'function') return undefined
+
                         return value
                     }
+                )
+
+                const scalarConfiguration: ReferenceConfiguration = {
+                    spec: {
+                        ...scalarConfig.spec,
+                        url: `${relativePath}/json`,
+                    },
+                    ...scalarConfig
                 }
-            )
 
-            const scalarConfiguration: ReferenceConfiguration = {
-                spec: {
-                    url: `${relativePath}/json`
-                },
-                ...scalarConfig
-            }
-
-            return new Response(
-                provider === 'swagger-ui'
-                    ? SwaggerUIRender(
-                          info,
-                          version,
-                          theme,
-                          stringifiedSwaggerOptions,
-                          autoDarkMode
-                      )
-                    : ScalarRender(scalarVersion, scalarConfiguration, scalarCDN),
-                {
-                    headers: {
-                        'content-type': 'text/html; charset=utf8'
+                return new Response(
+                    provider === 'swagger-ui'
+                        ? SwaggerUIRender(
+                              info,
+                              version,
+                              theme,
+                              stringifiedSwaggerOptions,
+                              autoDarkMode
+                          )
+                        : ScalarRender(
+                              scalarVersion,
+                              scalarConfiguration,
+                              scalarCDN
+                          ),
+                    {
+                        headers: {
+                            'content-type': 'text/html; charset=utf8'
+                        }
                     }
-                }
-            )
-        }).get(`${path}/json`, () => {
-            const routes = app.routes as InternalRoute[]
+                )
+            })()
+        ).get(
+            `${path}/json`,
+            () => {
+                const routes = app.routes as InternalRoute[]
 
-            if (routes.length !== totalRoutes) {
-                totalRoutes = routes.length
+                if (routes.length !== totalRoutes) {
+                    totalRoutes = routes.length
 
-                routes.forEach((route: InternalRoute) => {
-                    if (excludeMethods.includes(route.method)) return
+                    routes.forEach((route: InternalRoute) => {
+                        if (excludeMethods.includes(route.method)) return
 
-                    registerSchemaPath({
-                        schema,
-                        hook: route.hooks,
-                        method: route.method,
-                        path: route.path,
-                        // @ts-ignore
-                        models: app.definitions?.type,
-                        contentType: route.hooks.type
+                        registerSchemaPath({
+                            schema,
+                            hook: route.hooks,
+                            method: route.method,
+                            path: route.path,
+                            // @ts-ignore
+                            models: app.definitions?.type,
+                            contentType: route.hooks.type
+                        })
                     })
-                })
-            }
-
-            return {
-                openapi: '3.0.3',
-                ...{
-                    ...documentation,
-                    info: {
-                        title: 'Elysia Documentation',
-                        description: 'Development documentation',
-                        version: '0.0.0',
-                        ...documentation.info
-                    }
-                },
-                paths: filterPaths(schema, {
-                    excludeStaticFile,
-                    exclude: Array.isArray(exclude) ? exclude : [exclude]
-                }),
-                components: {
-                    ...documentation.components,
-                    schemas: {
-                        // @ts-ignore
-                        ...app.definitions?.type,
-                        ...documentation.components?.schemas
-                    }
                 }
-            } satisfies OpenAPIV3.Document
-        })
+
+                return {
+                    openapi: '3.0.3',
+                    ...{
+                        ...documentation,
+                        info: {
+                            title: 'Elysia Documentation',
+                            description: 'Development documentation',
+                            version: '0.0.0',
+                            ...documentation.info
+                        }
+                    },
+                    paths: filterPaths(schema, {
+                        excludeStaticFile,
+                        exclude: Array.isArray(exclude) ? exclude : [exclude]
+                    }),
+                    components: {
+                        ...documentation.components,
+                        schemas: {
+                            // @ts-ignore
+                            ...app.definitions?.type,
+                            ...documentation.components?.schemas
+                        }
+                    }
+                } satisfies OpenAPIV3.Document
+            }
+        )
 
         // This is intentional to prevent deeply nested type
         return app

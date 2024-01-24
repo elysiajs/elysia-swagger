@@ -25,7 +25,7 @@ export const mapProperties = (
         else throw new Error(`Can't find model ${schema}`)
 
     return Object.entries(schema?.properties ?? []).map(([key, value]) => {
-        const { type: valueType = undefined, ...rest } = value as any;
+        const { type: valueType = undefined, ...rest } = value as any
         return {
             // @ts-ignore
             ...rest,
@@ -33,9 +33,9 @@ export const mapProperties = (
             in: name,
             name: key,
             // @ts-ignore
-            required: schema!.required?.includes(key) ?? false,
-        };
-    });
+            required: schema!.required?.includes(key) ?? false
+        }
+    })
 }
 
 const mapTypesResponse = (
@@ -48,8 +48,11 @@ const mapTypesResponse = (
               required: string[]
           }
 ) => {
-    if (typeof schema === 'object'
-        && ['void', 'undefined', 'null'].includes(schema.type)) return;
+    if (
+        typeof schema === 'object' &&
+        ['void', 'undefined', 'null'].includes(schema.type)
+    )
+        return
 
     const responses: Record<string, OpenAPIV3.MediaTypeObject> = {}
 
@@ -122,12 +125,17 @@ export const registerSchemaPath = ({
 
     if (typeof responseSchema === 'object') {
         if (Kind in responseSchema) {
-            const { type, properties, required, additionalProperties, ...rest } =
-                responseSchema as typeof responseSchema & {
-                    type: string
-                    properties: Object
-                    required: string[]
-                }
+            const {
+                type,
+                properties,
+                required,
+                additionalProperties,
+                ...rest
+            } = responseSchema as typeof responseSchema & {
+                type: string
+                properties: Object
+                required: string[]
+            }
 
             responseSchema = {
                 '200': {
@@ -139,6 +147,7 @@ export const registerSchemaPath = ({
                             ? ({
                                   type,
                                   properties,
+                                  items: responseSchema.items,
                                   required
                               } as any)
                             : responseSchema
@@ -149,12 +158,16 @@ export const registerSchemaPath = ({
             Object.entries(responseSchema as Record<string, TSchema>).forEach(
                 ([key, value]) => {
                     if (typeof value === 'string') {
-                        if(!models[value]) return
+                        if (!models[value]) return
 
                         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                        const { type, properties, required, additionalProperties: _, ...rest } = models[
-                            value
-                        ] as TSchema & {
+                        const {
+                            type,
+                            properties,
+                            required,
+                            additionalProperties: _,
+                            ...rest
+                        } = models[value] as TSchema & {
                             type: string
                             properties: Object
                             required: string[]
@@ -166,33 +179,48 @@ export const registerSchemaPath = ({
                             content: mapTypesResponse(contentTypes, value)
                         }
                     } else {
-                        const { type, properties, required, additionalProperties, ...rest } =
-                            value as typeof value & {
-                                type: string
-                                properties: Object
-                                required: string[]
-                            }
+                        const {
+                            type,
+                            properties,
+                            required,
+                            additionalProperties,
+                            ...rest
+                        } = value as typeof value & {
+                            type: string
+                            properties: Object
+                            required: string[]
+                        }
 
                         responseSchema[key] = {
                             ...rest,
                             description: rest.description as any,
-                            content: mapTypesResponse(contentTypes, {
-                                type,
-                                properties,
-                                required
-                            })
+                            content: mapTypesResponse(
+                                contentTypes,
+                                rest.type === 'object' || rest.type === 'array'
+                                    ? ({
+                                          type: rest.type,
+                                          properties,
+                                          items: value.items,
+                                          required
+                                      } as any)
+                                    : value
+                            )
                         }
                     }
                 }
             )
         }
     } else if (typeof responseSchema === 'string') {
-        if(!(responseSchema in models)) return
+        if (!(responseSchema in models)) return
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { type, properties, required, additionalProperties: _, ...rest } = models[
-            responseSchema
-        ] as TSchema & {
+        const {
+            type,
+            properties,
+            required,
+            additionalProperties: _,
+            ...rest
+        } = models[responseSchema] as TSchema & {
             type: string
             properties: Object
             required: string[]

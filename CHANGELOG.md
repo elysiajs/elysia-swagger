@@ -1,3 +1,7 @@
+# 0.8.5 - 24 Jan 2024
+Bug fix:
+- [#39](https://github.com/elysiajs/elysia-swagger/issues/39) Array type does not work
+
 # 0.8.4 - 24 Jan 2024
 Feature:
 - [#96](https://github.com/elysiajs/elysia-swagger/pull/96) move to scalar configuration prop
