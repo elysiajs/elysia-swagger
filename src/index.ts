@@ -20,6 +20,7 @@ export const swagger =
         {
             provider = 'scalar',
             scalarVersion = '1.12.5',
+            scalarCDN = "",
             scalarConfig = {},
             documentation = {},
             version = '5.9.0',
@@ -33,6 +34,7 @@ export const swagger =
         }: ElysiaSwaggerConfig<Path> = {
             provider: 'scalar',
             scalarVersion: '1.12.5',
+            scalarCDN: "",
             scalarConfig: {},
             documentation: {},
             version: '5.9.0',
@@ -93,7 +95,7 @@ export const swagger =
                           stringifiedSwaggerOptions,
                           autoDarkMode
                       )
-                    : ScalarRender(scalarVersion, scalarConfiguration),
+                    : ScalarRender(scalarVersion, scalarConfiguration, scalarCDN),
                 {
                     headers: {
                         'content-type': 'text/html; charset=utf8'
