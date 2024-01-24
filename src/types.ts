@@ -31,7 +31,13 @@ export interface ElysiaSwaggerConfig<Path extends string = '/swagger'> {
     /**
      * Optional override to specifying the path for the Scalar bundle
      *
+     * Custom URL or path to locally hosted Scalar bundle 
+     *
+     * Lease blank to use default jsdeliver.net CDN
+     *
      * @default ''
+     * @example 'https://unpkg.com/@scalar/api-reference@1.13.10/dist/browser/standalone.js'
+     * @example '/public/standalone.js'
      * @see https://github.com/scalar/scalar
      */
     scalarCDN?: string
