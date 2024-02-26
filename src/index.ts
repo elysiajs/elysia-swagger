@@ -64,7 +64,7 @@ export const swagger =
 
         app.get(
             path,
-            (() => {
+            () => {
                 const combinedSwaggerOptions = {
                     url: `${relativePath}/json`,
                     dom_id: '#swagger-ui',
@@ -108,7 +108,7 @@ export const swagger =
                         }
                     }
                 )
-            })()
+            }
         ).get(
             `${path}/json`,
             () => {
