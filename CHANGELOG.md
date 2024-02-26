@@ -1,3 +1,13 @@
+
+# 1.0.0-beta.1 - 17 Feb 2024
+Change:
+- Add support for Elysia 1.0
+
+
+# 1.0.0-beta.0 - 6 Feb 2024
+Change:
+- Add support for Elysia 1.0
+
 # 0.8.5 - 24 Jan 2024
 Bug fix:
 - [#39](https://github.com/elysiajs/elysia-swagger/issues/39) Array type does not work

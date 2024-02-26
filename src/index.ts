@@ -112,7 +112,7 @@ export const swagger =
         ).get(
             `${path}/json`,
             () => {
-                const routes = app.routes as InternalRoute[]
+                const routes = app.router.history as InternalRoute[]
 
                 if (routes.length !== totalRoutes) {
                     totalRoutes = routes.length
