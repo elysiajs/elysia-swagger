@@ -64,7 +64,7 @@ export const swagger =
 
         app.get(
             path,
-            (() => {
+            () => {
                 const combinedSwaggerOptions = {
                     url: `${relativePath}/json`,
                     dom_id: '#swagger-ui',
@@ -108,11 +108,11 @@ export const swagger =
                         }
                     }
                 )
-            })()
+            }
         ).get(
             `${path}/json`,
             () => {
-                const routes = app.router.history as InternalRoute[]
+                const routes = app.routes as InternalRoute[]
 
                 if (routes.length !== totalRoutes) {
                     totalRoutes = routes.length

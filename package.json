@@ -35,7 +35,7 @@
         "release": "npm run build && npm run test && npm publish --access public"
     },
     "peerDependencies": {
-        "elysia": ">= 1.0.0-beta.5"
+        "elysia": ">= 1.0.0-beta.9"
     },
     "devDependencies": {
         "@apidevtools/swagger-parser": "^10.1.0",
@@ -43,7 +43,7 @@
         "@types/bun": "^1.0.4",
         "@types/lodash.clonedeep": "^4.5.7",
         "@types/node": "^20.1.4",
-        "elysia": "1.0.0-beta.5",
+        "elysia": "1.0.0-beta.9",
         "eslint": "^8.40.0",
         "rimraf": "4.3",
         "typescript": "^5.0.4"
