@@ -1,4 +1,19 @@
 
+# 1.0.2 - 18 Mar 2024
+Change:
+- Add support for Elysia 1.0
+
+
+# 1.0.0 - 16 Mar 2024
+Change:
+- Add support for Elysia 1.0
+
+
+# 1.0.0-rc.0 - 1 Mar 2024
+Change:
+- Add support for Elysia 1.0
+
+
 # 1.0.0-beta.1 - 17 Feb 2024
 Change:
 - Add support for Elysia 1.0
