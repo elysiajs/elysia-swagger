@@ -130,6 +130,7 @@ export const registerSchemaPath = ({
                 properties,
                 required,
                 additionalProperties,
+                patternProperties,
                 ...rest
             } = responseSchema as typeof responseSchema & {
                 type: string
@@ -147,6 +148,7 @@ export const registerSchemaPath = ({
                             ? ({
                                   type,
                                   properties,
+                                  patternProperties,
                                   items: responseSchema.items,
                                   required
                               } as any)
@@ -165,7 +167,8 @@ export const registerSchemaPath = ({
                             type,
                             properties,
                             required,
-                            additionalProperties: _,
+                            additionalProperties: _1,
+                            patternProperties: _2,
                             ...rest
                         } = models[value] as TSchema & {
                             type: string
@@ -184,6 +187,7 @@ export const registerSchemaPath = ({
                             properties,
                             required,
                             additionalProperties,
+                            patternProperties,
                             ...rest
                         } = value as typeof value & {
                             type: string
@@ -200,6 +204,7 @@ export const registerSchemaPath = ({
                                     ? ({
                                           type,
                                           properties,
+                                          patternProperties,
                                           items: value.items,
                                           required
                                       } as any)
@@ -218,7 +223,8 @@ export const registerSchemaPath = ({
             type,
             properties,
             required,
-            additionalProperties: _,
+            additionalProperties: _1,
+            patternProperties: _2,
             ...rest
         } = models[responseSchema] as TSchema & {
             type: string
