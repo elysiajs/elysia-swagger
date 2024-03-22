@@ -79,6 +79,5 @@ it('returns a valid Swagger/OpenAPI json config for many routes', async () => {
         )
 
     const res = await app.handle(req('/swagger/json')).then((x) => x.json())
-    console.log(res.paths['/json/{id}'].post.parameters)
     await SwaggerParser.validate(res).catch((err) => fail(err))
 })
