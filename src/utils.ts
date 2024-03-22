@@ -25,11 +25,11 @@ export const mapProperties = (
         else throw new Error(`Can't find model ${schema}`)
 
     return Object.entries(schema?.properties ?? []).map(([key, value]) => {
-        const { type: valueType = undefined, description, examples, ...schemaProperties } = value as any
+        const { type: valueType = undefined, description, examples, ...schemaKeywords } = value as any
         return {
             // @ts-ignore
             description, examples,
-            schema: { type: valueType, ...schemaProperties },
+            schema: { type: valueType, ...schemaKeywords },
             in: name,
             name: key,
             // @ts-ignore
