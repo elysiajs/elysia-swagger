@@ -44,7 +44,7 @@ export const plugin = new Elysia({
     })
     .post(
         '/json/:id',
-        ({ body, params: { id }, query: { name } }) => ({
+        ({ body, params: { id }, query: { name, email, } }) => ({
             ...body,
             id
         }),
@@ -52,6 +52,22 @@ export const plugin = new Elysia({
             body: 'sign',
             params: t.Object({
                 id: t.Numeric()
+            }),
+            query: t.Object({
+                name: t.String(),
+                email: t.String({
+                    description: 'sample email description',
+                    format: 'email',
+                    examples: ['test@test.com']
+                }),
+                birthday: t.String({
+                    description: 'sample birthday description',
+                    pattern: '\\d{4}-\\d{2}-\\d{2}',
+                    minLength: 10,
+                    maxLength: 10,
+                    examples: ['2024-01-01']
+                }),
+                gender: t.Union([t.Literal('M'), t.Literal('F')])
             }),
             response: {
                 200: t.Object(
