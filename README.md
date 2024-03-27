@@ -55,7 +55,7 @@ Choose between [Scalar](https://swagger.io/specification/v2/) & [SwaggerUI](http
 Customize scalarConfig, refers to [Scalar config](https://github.com/scalar/scalar)
 
 ## swagger
-Customize Swagger config, refers to [Swagger 2.0 config](https://swagger.io/specification/v2/)
+Customize Swagger config, refers to [Swagger 3.0.3 config](https://swagger.io/specification/v3/)
 
 ## path
 @default '/swagger'
