@@ -264,6 +264,7 @@ export const registerSchemaPath = ({
             ...(bodySchema
                 ? {
                       requestBody: {
+                          required: true,
                           content: mapTypesResponse(
                               contentTypes,
                               typeof bodySchema === 'string'

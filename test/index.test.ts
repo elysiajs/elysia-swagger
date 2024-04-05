@@ -156,4 +156,16 @@ describe('Swagger', () => {
             response.paths['/null'].get.responses['204'].content
         ).toBeUndefined()
     })
+
+    it("should set the required field to true when a request body is present", async () => {
+        const app = new Elysia().use(swagger()).post("/post", () => {}, {
+            body: t.Object({ name: t.String() }),
+        });
+
+        const res = await app.handle(req("/swagger/json"));
+        expect(res.status).toBe(200);
+        const response = await res.json();
+        expect(response.paths['/post'].post.requestBody.required).toBe(true);
+    })
+
 })
