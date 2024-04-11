@@ -143,10 +143,12 @@ export const swagger =
                             ...documentation.info
                         }
                     },
-                    paths: filterPaths(schema, {
+                    paths: {...filterPaths(schema, {
                         excludeStaticFile,
                         exclude: Array.isArray(exclude) ? exclude : [exclude]
-                    }),
+                        }),
+                        ...documentation.paths
+                    },
                     components: {
                         ...documentation.components,
                         schemas: {
