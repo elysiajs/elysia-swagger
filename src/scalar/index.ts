@@ -33,6 +33,6 @@ export const ScalarRender = (
         cdn
             ? cdn
             : `https://cdn.jsdelivr.net/npm/@scalar/api-reference@${version}/dist/browser/standalone.min.js`
-    }"></script>
+    }" crossorigin></script>
   </body>
 </html>`
