@@ -110,7 +110,7 @@ export const swagger =
                 )
             }
         ).get(
-            `${path}/json`,
+            path === '/' ? '/json' : `${path}/json`,
             () => {
                 const routes = app.routes as InternalRoute[]
 
