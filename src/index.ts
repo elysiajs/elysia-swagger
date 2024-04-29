@@ -138,7 +138,7 @@ export const swagger =
                     openapi: '3.0.3',
                     ...{
                         ...documentation,
-                        tags: (documentation?.tags as {name: string; description: string}[])?.filter((tag) => !excludeTags?.includes(tag?.name)),
+                        tags: documentation.tags?.filter((tag) => !excludeTags?.includes(tag?.name)),
                         info: {
                             title: 'Elysia Documentation',
                             description: 'Development documentation',
