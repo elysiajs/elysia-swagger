@@ -30,7 +30,8 @@ export const swagger =
             swaggerOptions = {},
             theme = `https://unpkg.com/swagger-ui-dist@${version}/swagger-ui.css`,
             autoDarkMode = true,
-            excludeMethods = ['OPTIONS']
+            excludeMethods = ['OPTIONS'],
+            excludeTags = []
         }: ElysiaSwaggerConfig<Path> = {
             provider: 'scalar',
             scalarVersion: 'latest',
@@ -43,7 +44,8 @@ export const swagger =
             exclude: [],
             swaggerOptions: {},
             autoDarkMode: true,
-            excludeMethods: ['OPTIONS']
+            excludeMethods: ['OPTIONS'],
+            excludeTags: []
         }
     ) =>
     (app: Elysia) => {
@@ -136,6 +138,7 @@ export const swagger =
                     openapi: '3.0.3',
                     ...{
                         ...documentation,
+                        tags: (documentation?.tags as {name: string; description: string}[])?.filter((tag) => !excludeTags?.includes(tag?.name)),
                         info: {
                             title: 'Elysia Documentation',
                             description: 'Development documentation',
