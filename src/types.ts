@@ -111,4 +111,9 @@ export interface ElysiaSwaggerConfig<Path extends string = '/swagger'> {
      * Exclude methods from Swagger
      */
     excludeMethods?: string[]
+
+    /**
+     * Exclude tags from Swagger or Scalar
+     */
+    excludeTags?: string[]
 }
