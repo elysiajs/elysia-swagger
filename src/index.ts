@@ -146,7 +146,7 @@ export const swagger =
                             ...documentation.info
                         }
                     },
-                    paths: {...filterPaths(schema, {
+                    paths: {...filterPaths(schema, relativePath, {
                         excludeStaticFile,
                         exclude: Array.isArray(exclude) ? exclude : [exclude]
                         }),
