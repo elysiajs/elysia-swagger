@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import path from 'path'
 import type { HTTPMethod, LocalHook } from 'elysia'
 
 import { Kind, type TSchema } from '@sinclair/typebox'
@@ -282,6 +283,7 @@ export const registerSchemaPath = ({
 
 export const filterPaths = (
     paths: Record<string, any>,
+    docsPath: string,
     {
         excludeStaticFile = true,
         exclude = []
@@ -292,6 +294,11 @@ export const filterPaths = (
 ) => {
     const newPaths: Record<string, any> = {}
 
+    // exclude docs path and OpenAPI json path
+    const excludePaths = [`/${docsPath}`, `/${docsPath}/json`].map((p) =>
+		path.normalize(p)
+	)
+
     for (const [key, value] of Object.entries(paths))
         if (
             !exclude.some((x) => {
@@ -299,7 +306,7 @@ export const filterPaths = (
 
                 return x.test(key)
             }) &&
-            !key.includes('/swagger') &&
+            !excludePaths.includes(key) &&
             !key.includes('*') &&
             (excludeStaticFile ? !key.includes('.') : true)
         ) {
