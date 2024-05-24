@@ -45,7 +45,7 @@
     "@types/node": "^20.1.4",
     "elysia": "1.0.2",
     "eslint": "^8.40.0",
-    "rimraf": "4.3",
+    "rimraf": "5.0",
     "typescript": "^5.0.4"
   },
   "dependencies": {
