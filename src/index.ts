@@ -62,13 +62,11 @@ export const swagger =
             ...documentation.info
         }
 
-        const relativePath = path.startsWith('/') ? path.slice(1) : path
-
         app.get(
             path,
             () => {
                 const combinedSwaggerOptions = {
-                    url: `${relativePath}/json`,
+                    url: `${path}/json`,
                     dom_id: '#swagger-ui',
                     ...swaggerOptions
                 }
@@ -85,7 +83,7 @@ export const swagger =
                 const scalarConfiguration: ReferenceConfiguration = {
                     spec: {
                         ...scalarConfig.spec,
-                        url: `${relativePath}/json`,
+                        url: `${path}/json`,
                     },
                     ...scalarConfig
                 }
@@ -146,7 +144,7 @@ export const swagger =
                             ...documentation.info
                         }
                     },
-                    paths: {...filterPaths(schema, relativePath, {
+                    paths: {...filterPaths(schema, path, {
                         excludeStaticFile,
                         exclude: Array.isArray(exclude) ? exclude : [exclude]
                         }),
