@@ -169,3 +169,4 @@ export const swagger =
     }
 
 export default swagger
+export type { ElysiaSwaggerConfig }
