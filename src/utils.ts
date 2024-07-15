@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import path from 'path'
 import type { HTTPMethod, LocalHook } from 'elysia'
 
 import { Kind, type TSchema } from '@sinclair/typebox'
@@ -295,30 +296,36 @@ export const registerSchemaPath = ({
 }
 
 export const filterPaths = (
-	paths: Record<string, any>,
-	{
-		excludeStaticFile = true,
-		exclude = []
-	}: {
-		excludeStaticFile: boolean
-		exclude: (string | RegExp)[]
-	}
+    paths: Record<string, any>,
+    docsPath: string,
+    {
+        excludeStaticFile = true,
+        exclude = []
+    }: {
+        excludeStaticFile: boolean
+        exclude: (string | RegExp)[]
+    }
 ) => {
 	const newPaths: Record<string, any> = {}
 
-	for (const [key, value] of Object.entries(paths))
-		if (
-			!exclude.some((x) => {
-				if (typeof x === 'string') return key === x
+    // exclude docs path and OpenAPI json path
+    const excludePaths = [`/${docsPath}`, `/${docsPath}/json`].map((p) =>
+		path.normalize(p)
+	)
 
-				return x.test(key)
-			}) &&
-			!key.includes('/swagger') &&
-			!key.includes('*') &&
-			(excludeStaticFile ? !key.includes('.') : true)
-		) {
-			Object.keys(value).forEach((method) => {
-				const schema = value[method]
+    for (const [key, value] of Object.entries(paths))
+        if (
+            !exclude.some((x) => {
+                if (typeof x === 'string') return key === x
+
+                return x.test(key)
+            }) &&
+            !excludePaths.includes(key) &&
+            !key.includes('*') &&
+            (excludeStaticFile ? !key.includes('.') : true)
+        ) {
+            Object.keys(value).forEach((method) => {
+                const schema = value[method]
 
 				if (key.includes('{')) {
 					if (!schema.parameters) schema.parameters = []
