@@ -78,6 +78,8 @@ it('returns a valid Swagger/OpenAPI json config for many routes', async () => {
             }
         )
 
+    await app.modules
+
     const res = await app.handle(req('/swagger/json')).then((x) => x.json())
     await SwaggerParser.validate(res).catch((err) => fail(err))
 })

@@ -8,164 +8,196 @@ import { fail } from 'assert'
 const req = (path: string) => new Request(`http://localhost${path}`)
 
 describe('Swagger', () => {
-    it('show Swagger page', async () => {
-        const app = new Elysia().use(swagger())
+	it('show Swagger page', async () => {
+		const app = new Elysia().use(swagger())
 
-        const res = await app.handle(req('/swagger'))
-        expect(res.status).toBe(200)
-    })
+		await app.modules
 
-    it('returns a valid Swagger/OpenAPI json config', async () => {
-        const app = new Elysia().use(swagger())
-        const res = await app.handle(req('/swagger/json')).then((x) => x.json())
-        expect(res.openapi).toBe('3.0.3')
-        await SwaggerParser.validate(res).catch((err) => fail(err))
-    })
+		const res = await app.handle(req('/swagger'))
+		expect(res.status).toBe(200)
+	})
 
-    it('use custom Swagger version', async () => {
-        const app = new Elysia().use(
-            swagger({
-                provider: 'swagger-ui',
-                version: '4.5.0'
-            })
-        )
+	it('returns a valid Swagger/OpenAPI json config', async () => {
+		const app = new Elysia().use(swagger())
 
-        const res = await app.handle(req('/swagger')).then((x) => x.text())
-        expect(
-            res.includes(
-                'https://unpkg.com/swagger-ui-dist@4.5.0/swagger-ui-bundle.js'
-            )
-        ).toBe(true)
-    })
+		await app.modules
 
-    it('follow title and description', async () => {
-        const app = new Elysia().use(
-            swagger({
-                version: '4.5.0',
-                provider: 'swagger-ui',
-                documentation: {
-                    info: {
-                        title: 'Elysia Documentation',
-                        description: 'Herrscher of Human',
-                        version: '1.0.0'
-                    }
-                }
-            })
-        )
+		const res = await app.handle(req('/swagger/json')).then((x) => x.json())
+		expect(res.openapi).toBe('3.0.3')
+		await SwaggerParser.validate(res).catch((err) => fail(err))
+	})
 
-        const res = await app.handle(req('/swagger')).then((x) => x.text())
+	it('use custom Swagger version', async () => {
+		const app = new Elysia().use(
+			swagger({
+				provider: 'swagger-ui',
+				version: '4.5.0'
+			})
+		)
 
-        expect(res.includes('<title>Elysia Documentation</title>')).toBe(true)
-        expect(
-            res.includes(
-                `<meta
+		await app.modules
+
+		const res = await app.handle(req('/swagger')).then((x) => x.text())
+		expect(
+			res.includes(
+				'https://unpkg.com/swagger-ui-dist@4.5.0/swagger-ui-bundle.js'
+			)
+		).toBe(true)
+	})
+
+	it('follow title and description', async () => {
+		const app = new Elysia().use(
+			swagger({
+				version: '4.5.0',
+				provider: 'swagger-ui',
+				documentation: {
+					info: {
+						title: 'Elysia Documentation',
+						description: 'Herrscher of Human',
+						version: '1.0.0'
+					}
+				}
+			})
+		)
+
+		await app.modules
+
+		const res = await app.handle(req('/swagger')).then((x) => x.text())
+
+		expect(res.includes('<title>Elysia Documentation</title>')).toBe(true)
+		expect(
+			res.includes(
+				`<meta
         name="description"
         content="Herrscher of Human"
     />`
-            )
-        ).toBe(true)
-    })
+			)
+		).toBe(true)
+	})
 
-    it('use custom path', async () => {
-        const app = new Elysia().use(
-            swagger({
-                path: '/v2/swagger'
-            })
-        )
+	it('use custom path', async () => {
+		const app = new Elysia().use(
+			swagger({
+				path: '/v2/swagger'
+			})
+		)
 
-        const res = await app.handle(req('/v2/swagger'))
-        expect(res.status).toBe(200)
+		await app.modules
 
-        const resJson = await app.handle(req('/v2/swagger/json'))
-        expect(resJson.status).toBe(200)
-    })
+		const res = await app.handle(req('/v2/swagger'))
+		expect(res.status).toBe(200)
 
-    it('Swagger UI options', async () => {
-        const app = new Elysia().use(
-            swagger({
-                provider: 'swagger-ui',
-                swaggerOptions: {
-                    persistAuthorization: true
-                }
-            })
-        )
-        const res = await app.handle(req('/swagger')).then((x) => x.text())
-        const expected = `"persistAuthorization":true`
+		const resJson = await app.handle(req('/v2/swagger/json'))
+		expect(resJson.status).toBe(200)
+	})
 
-        expect(res.trim().includes(expected.trim())).toBe(true)
-    })
+	it('Swagger UI options', async () => {
+		const app = new Elysia().use(
+			swagger({
+				provider: 'swagger-ui',
+				swaggerOptions: {
+					persistAuthorization: true
+				}
+			})
+		)
 
-    it('should not return content response when using Void type', async () => {
-        const app = new Elysia().use(swagger()).get('/void', () => {}, {
-            response: {
-                204: t.Void({
-                    description: 'Void response'
-                })
-            }
-        })
+		await app.modules
 
-        const res = await app.handle(req('/swagger/json'))
-        expect(res.status).toBe(200)
-        const response = await res.json()
-        expect(response.paths['/void'].get.responses['204'].description).toBe(
-            'Void response'
-        )
-        expect(
-            response.paths['/void'].get.responses['204'].content
-        ).toBeUndefined()
-    })
+		const res = await app.handle(req('/swagger')).then((x) => x.text())
+		const expected = `"persistAuthorization":true`
 
-    it('should not return content response when using Undefined type', async () => {
-        const app = new Elysia()
-            .use(swagger())
-            .get('/undefined', () => undefined, {
-                response: {
-                    204: t.Undefined({
-                        description: 'Undefined response'
-                    })
-                }
-            })
+		expect(res.trim().includes(expected.trim())).toBe(true)
+	})
 
-        const res = await app.handle(req('/swagger/json'))
-        expect(res.status).toBe(200)
-        const response = await res.json()
-        expect(
-            response.paths['/undefined'].get.responses['204'].description
-        ).toBe('Undefined response')
-        expect(
-            response.paths['/undefined'].get.responses['204'].content
-        ).toBeUndefined()
-    })
+	it('should not return content response when using Void type', async () => {
+		const app = new Elysia().use(swagger()).get('/void', () => {}, {
+			response: {
+				204: t.Void({
+					description: 'Void response'
+				})
+			}
+		})
 
-    it('should not return content response when using Null type', async () => {
-        const app = new Elysia().use(swagger()).get('/null', () => null, {
-            response: {
-                204: t.Null({
-                    description: 'Null response'
-                })
-            }
-        })
+		await app.modules
 
-        const res = await app.handle(req('/swagger/json'))
-        expect(res.status).toBe(200)
-        const response = await res.json()
-        expect(response.paths['/null'].get.responses['204'].description).toBe(
-            'Null response'
-        )
-        expect(
-            response.paths['/null'].get.responses['204'].content
-        ).toBeUndefined()
-    })
+		const res = await app.handle(req('/swagger/json'))
+		expect(res.status).toBe(200)
+		const response = await res.json()
+		expect(response.paths['/void'].get.responses['204'].description).toBe(
+			'Void response'
+		)
+		expect(
+			response.paths['/void'].get.responses['204'].content
+		).toBeUndefined()
+	})
 
-    it("should set the required field to true when a request body is present", async () => {
-        const app = new Elysia().use(swagger()).post("/post", () => {}, {
-            body: t.Object({ name: t.String() }),
-        });
+	it('should not return content response when using Undefined type', async () => {
+		const app = new Elysia()
+			.use(swagger())
+			.get('/undefined', () => undefined, {
+				response: {
+					204: t.Undefined({
+						description: 'Undefined response'
+					})
+				}
+			})
 
-        const res = await app.handle(req("/swagger/json"));
-        expect(res.status).toBe(200);
-        const response = await res.json();
-        expect(response.paths['/post'].post.requestBody.required).toBe(true);
-    })
+		await app.modules
 
+		const res = await app.handle(req('/swagger/json'))
+		expect(res.status).toBe(200)
+		const response = await res.json()
+		expect(
+			response.paths['/undefined'].get.responses['204'].description
+		).toBe('Undefined response')
+		expect(
+			response.paths['/undefined'].get.responses['204'].content
+		).toBeUndefined()
+	})
+
+	it('should not return content response when using Null type', async () => {
+		const app = new Elysia().use(swagger()).get('/null', () => null, {
+			response: {
+				204: t.Null({
+					description: 'Null response'
+				})
+			}
+		})
+
+		await app.modules
+
+		const res = await app.handle(req('/swagger/json'))
+		expect(res.status).toBe(200)
+		const response = await res.json()
+		expect(response.paths['/null'].get.responses['204'].description).toBe(
+			'Null response'
+		)
+		expect(
+			response.paths['/null'].get.responses['204'].content
+		).toBeUndefined()
+	})
+
+	it('should set the required field to true when a request body is present', async () => {
+		const app = new Elysia().use(swagger()).post('/post', () => {}, {
+			body: t.Object({ name: t.String() })
+		})
+
+		await app.modules
+
+		const res = await app.handle(req('/swagger/json'))
+		expect(res.status).toBe(200)
+		const response = await res.json()
+		expect(response.paths['/post'].post.requestBody.required).toBe(true)
+	})
+
+	it('resolve optional param to param', async () => {
+		const app = new Elysia().use(swagger()).get('/id/:id?', () => {})
+
+		await app.modules
+
+		const res = await app.handle(req('/swagger/json'))
+		expect(res.status).toBe(200)
+		const response = await res.json()
+		expect(response.paths).toContainKey('/id/{id}')
+	})
 })

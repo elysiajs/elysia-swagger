@@ -39,7 +39,6 @@ const app = new Elysia()
             }
         })
     )
-    .use(plugin)
+    // .use(plugin)
+    .get('/id/:id?', 'a')
     .listen(3000)
-
-console.log(app.routes)
