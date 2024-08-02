@@ -200,4 +200,23 @@ describe('Swagger', () => {
 		const response = await res.json()
 		expect(response.paths).toContainKey('/id/{id}')
 	})
+
+	it('should hide routes with hide = true from paths', async () => {
+		const app = new Elysia().use(swagger())
+			.get("/public", "omg")
+			.guard({
+				detail: {
+					hide: true
+				}
+			})
+			.get("/hidden", "ok")
+
+		await app.modules
+
+		const res = await app.handle(req('/swagger/json'))
+		expect(res.status).toBe(200)
+		const response = await res.json()
+		expect(response.paths['/public']).not.toBeUndefined();
+		expect(response.paths['/hidden']).toBeUndefined();
+	})
 })

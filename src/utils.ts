@@ -118,7 +118,7 @@ export const registerSchemaPath = ({
 	models: Record<string, TSchema>
 }) => {
 	if (hook) hook = deepClone(hook)
-
+		
 	const contentType = hook?.type ?? [
 		'application/json',
 		'multipart/form-data',
