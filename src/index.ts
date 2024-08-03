@@ -110,8 +110,10 @@ export const swagger = async <Path extends string = '/swagger'>(
 
 		if (routes.length !== totalRoutes) {
 			totalRoutes = routes.length
-
+			
 			routes.forEach((route: InternalRoute) => {
+				if (route.hooks?.detail?.hide === true) return
+				// TODO: route.hooks?.detail?.hide !== false  add ability to hide: false to prevent excluding
 				if (excludeMethods.includes(route.method)) return
 
 				registerSchemaPath({
