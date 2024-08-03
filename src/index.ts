@@ -109,12 +109,29 @@ export const swagger = async <Path extends string = '/swagger'>(
 		const routes = app.getGlobalRoutes() as InternalRoute[]
 
 		if (routes.length !== totalRoutes) {
+			const ALLOWED_METHODS = ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS', 'HEAD', 'PATCH', 'TRACE']
 			totalRoutes = routes.length
 			
 			routes.forEach((route: InternalRoute) => {
 				if (route.hooks?.detail?.hide === true) return
 				// TODO: route.hooks?.detail?.hide !== false  add ability to hide: false to prevent excluding
 				if (excludeMethods.includes(route.method)) return
+				if (ALLOWED_METHODS.includes(route.method) === false && route.method !== 'ALL') return
+
+				if (route.method === 'ALL') {
+					ALLOWED_METHODS.forEach((method) => {
+						registerSchemaPath({
+							schema,
+							hook: route.hooks,
+							method,
+							path: route.path,
+							// @ts-ignore
+							models: app.definitions?.type,
+							contentType: route.hooks.type
+						})
+					})
+					return
+				}
 
 				registerSchemaPath({
 					schema,
