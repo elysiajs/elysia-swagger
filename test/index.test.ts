@@ -219,4 +219,31 @@ describe('Swagger', () => {
 		expect(response.paths['/public']).not.toBeUndefined();
 		expect(response.paths['/hidden']).toBeUndefined();
 	})
+
+	it('should expand .all routes', async () => {
+		const app = new Elysia().use(swagger())
+			.all("/all", "woah")
+
+		await app.modules
+
+		const res = await app.handle(req('/swagger/json'))
+		expect(res.status).toBe(200)
+		const response = await res.json()
+		expect(Object.keys(response.paths['/all'])).toBeArrayOfSize(8)
+	})
+
+	it('should hide routes that are invalid', async () => {
+		const app = new Elysia().use(swagger())
+			.get("/valid", "ok")
+			.route("LOCK", "/invalid", "nope")
+
+		await app.modules
+
+		const res = await app.handle(req('/swagger/json'))
+		expect(res.status).toBe(200)
+		const response = await res.json()
+		expect(response.paths['/valid']).not.toBeUndefined();
+		expect(response.paths['/invalid']).toBeUndefined();
+
+	})
 })

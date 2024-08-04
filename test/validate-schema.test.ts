@@ -77,6 +77,7 @@ it('returns a valid Swagger/OpenAPI json config for many routes', async () => {
                 )
             }
         )
+        .route('LOCK', '/lock', () => 'locked')
 
     await app.modules
 
