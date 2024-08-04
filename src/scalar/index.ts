@@ -1,14 +1,24 @@
 import scalarElysiaTheme from './theme'
-import type { ReferenceConfiguration } from './types'
+import type { OpenAPIV3 } from 'openapi-types'
+import type { ReferenceConfiguration } from '@scalar/api-reference'
 
 export const ScalarRender = (
+    info: OpenAPIV3.InfoObject,
     version: string,
     config: ReferenceConfiguration,
     cdn: string
 ) => `<!doctype html>
 <html>
   <head>
-    <title>API Reference</title>
+    <title>${info.title}</title>
+    <meta
+        name="description"
+        content="${info.description}"
+    />
+    <meta
+        name="og:description"
+        content="${info.description}"
+    />
     <meta charset="utf-8" />
     <meta
       name="viewport"
