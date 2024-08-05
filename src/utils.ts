@@ -6,8 +6,6 @@ import type { HTTPMethod, LocalHook } from 'elysia'
 import { Kind, type TSchema } from '@sinclair/typebox'
 import type { OpenAPIV3 } from 'openapi-types'
 
-import deepClone from 'lodash.clonedeep'
-
 export const toOpenAPIPath = (path: string) =>
 	path
 		.split('/')
@@ -116,9 +114,7 @@ export const registerSchemaPath = ({
 	method: HTTPMethod
 	hook?: LocalHook<any, any, any, any, any, any, any>
 	models: Record<string, TSchema>
-}) => {
-	if (hook) hook = deepClone(hook)
-		
+}) => {		
 	const contentType = hook?.type ?? [
 		'application/json',
 		'multipart/form-data',
