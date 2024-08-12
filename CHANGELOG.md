@@ -1,3 +1,6 @@
+# 1.1.1 - 12 Aug 2024
+Feature:
+- add hide flag
 
 # 1.1.0 - 16 Jul 2024
 Change:
