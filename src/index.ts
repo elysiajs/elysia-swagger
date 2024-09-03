@@ -66,7 +66,7 @@ export const swagger = async <Path extends string = '/swagger'>(
 
 	app.get(path, function documentation() {
 		const combinedSwaggerOptions = {
-			url: `${relativePath}/json`,
+			url: `/${relativePath}/json`,
 			dom_id: '#swagger-ui',
 			...swaggerOptions
 		}
@@ -83,7 +83,7 @@ export const swagger = async <Path extends string = '/swagger'>(
 		const scalarConfiguration: ReferenceConfiguration = {
 			spec: {
 				...scalarConfig.spec,
-				url: `${relativePath}/json`
+				url: `/${relativePath}/json`
 			},
 			...scalarConfig
 		}
@@ -111,7 +111,7 @@ export const swagger = async <Path extends string = '/swagger'>(
 		if (routes.length !== totalRoutes) {
 			const ALLOWED_METHODS = ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS', 'HEAD', 'PATCH', 'TRACE']
 			totalRoutes = routes.length
-			
+
 			routes.forEach((route: InternalRoute) => {
 				if (route.hooks?.detail?.hide === true) return
 				// TODO: route.hooks?.detail?.hide !== false  add ability to hide: false to prevent excluding
