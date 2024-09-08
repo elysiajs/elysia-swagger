@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import path from 'path'
+import { normalize } from 'pathe'
 import type { HTTPMethod, LocalHook } from 'elysia'
 
 import { Kind, type TSchema } from '@sinclair/typebox'
@@ -310,7 +310,7 @@ export const filterPaths = (
 
     // exclude docs path and OpenAPI json path
     const excludePaths = [`/${docsPath}`, `/${docsPath}/json`].map((p) =>
-		path.normalize(p)
+		normalize(p)
 	)
 
     for (const [key, value] of Object.entries(paths))
