@@ -1,4 +1,52 @@
-import type { OpenAPIV3 } from 'openapi-types'
+import { OpenAPIV3 } from 'openapi-types';
+
+type DateTimeSchema = {
+    type: 'string';
+    format: 'date-time';
+    default?: string;
+};
+
+type SchemaObject = OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject;
+
+function isSchemaObject(schema: SchemaObject): schema is OpenAPIV3.SchemaObject {
+    return 'type' in schema || 'properties' in schema || 'items' in schema;
+}
+
+function isDateTimeProperty(key: string, schema: OpenAPIV3.SchemaObject): boolean {
+    return (key === 'createdAt' || key === 'updatedAt') &&
+           'anyOf' in schema &&
+           Array.isArray(schema.anyOf);
+}
+
+function transformDateProperties(schema: SchemaObject): SchemaObject {
+    if (!isSchemaObject(schema) || typeof schema !== 'object' || schema === null) {
+        return schema;
+    }
+
+    const newSchema: OpenAPIV3.SchemaObject = { ...schema };
+
+    Object.entries(newSchema).forEach(([key, value]) => {
+        if (isSchemaObject(value)) {
+            if (isDateTimeProperty(key, value)) {
+                const dateTimeFormat = value.anyOf?.find((item): item is OpenAPIV3.SchemaObject => 
+                    isSchemaObject(item) && item.format === 'date-time'
+                );
+                if (dateTimeFormat) {
+                    const dateTimeSchema: DateTimeSchema = {
+                        type: 'string',
+                        format: 'date-time',
+                        default: dateTimeFormat.default
+                    };
+                    (newSchema as Record<string, SchemaObject>)[key] = dateTimeSchema;
+                }
+            } else {
+                (newSchema as Record<string, SchemaObject>)[key] = transformDateProperties(value);
+            }
+        }
+    });
+
+    return newSchema;
+}
 
 export const SwaggerUIRender = (
     info: OpenAPIV3.InfoObject,
@@ -11,7 +59,21 @@ export const SwaggerUIRender = (
           },
     stringifiedSwaggerOptions: string,
     autoDarkMode?: boolean
-) => `<!DOCTYPE html>
+): string => {
+    const swaggerOptions: OpenAPIV3.Document = JSON.parse(stringifiedSwaggerOptions);
+
+    if (swaggerOptions.components && swaggerOptions.components.schemas) {
+        swaggerOptions.components.schemas = Object.fromEntries(
+            Object.entries(swaggerOptions.components.schemas).map(([key, schema]) => [
+                key,
+                transformDateProperties(schema)
+            ])
+        );
+    }
+
+    const transformedStringifiedSwaggerOptions = JSON.stringify(swaggerOptions);
+
+    return `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -57,8 +119,9 @@ export const SwaggerUIRender = (
     <script src="https://unpkg.com/swagger-ui-dist@${version}/swagger-ui-bundle.js" crossorigin></script>
     <script>
         window.onload = () => {
-            window.ui = SwaggerUIBundle(${stringifiedSwaggerOptions});
+            window.ui = SwaggerUIBundle(${transformedStringifiedSwaggerOptions});
         };
     </script>
 </body>
-</html>`
+</html>`;
+};
