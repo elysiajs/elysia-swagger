@@ -1,3 +1,10 @@
+# 1.1.2 - 5 Sep 2024
+Feature:
+- add provenance publish
+
+# 1.1.1 - 12 Aug 2024
+Feature:
+- add hide flag
 
 # 1.1.0 - 16 Jul 2024
 Change:
@@ -59,9 +66,9 @@ Change:
 Change:
 - Add support for Elysia 0.8
 
-# 0.7.5 
+# 0.7.5
 Improvement:
-- #[59](https://github.com/elysiajs/elysia-swagger/pull/59) use relative path to swagger json #59 
+- #[59](https://github.com/elysiajs/elysia-swagger/pull/59) use relative path to swagger json #59
 
 # 0.7.4 - 27 Oct 2023
 Improvement:
@@ -78,7 +85,7 @@ Bug fix:
 # 0.7.3 - 26 Sep 2023
 Feature:
 - [#19](https://github.com/elysiajs/elysia-swagger/pull/19) feat: handle nullish response types
-- [#18](https://github.com/elysiajs/elysia-swagger/pull/18) swagger ui options 
+- [#18](https://github.com/elysiajs/elysia-swagger/pull/18) swagger ui options
 
 
 Improvement:
