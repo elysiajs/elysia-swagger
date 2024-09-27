@@ -68,14 +68,12 @@
         "@apidevtools/swagger-parser": "^10.1.0",
         "@scalar/api-reference": "^1.12.5",
         "@types/bun": "1.1.6",
-        "@types/lodash.clonedeep": "^4.5.9",
         "elysia": ">= 1.1.0-rc.2",
         "eslint": "9.6.0",
         "tsup": "^8.1.0",
         "typescript": "^5.5.3"
     },
     "dependencies": {
-        "lodash.clonedeep": "^4.5.0",
         "openapi-types": "^12.1.3",
         "pathe": "^1.1.2"
     }
