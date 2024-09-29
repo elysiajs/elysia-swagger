@@ -7,7 +7,7 @@ import { ScalarRender } from './scalar'
 import { filterPaths, registerSchemaPath } from './utils'
 
 import type { OpenAPIV3 } from 'openapi-types'
-import type { ReferenceConfiguration } from './scalar/types'
+import type { ReferenceConfiguration } from '@scalar/api-reference'
 import type { ElysiaSwaggerConfig } from './types'
 
 /**
@@ -97,7 +97,7 @@ export const swagger = async <Path extends string = '/swagger'>(
 						stringifiedSwaggerOptions,
 						autoDarkMode
 					)
-				: ScalarRender(scalarVersion, scalarConfiguration, scalarCDN),
+				: ScalarRender(info, scalarVersion, scalarConfiguration, scalarCDN),
 			{
 				headers: {
 					'content-type': 'text/html; charset=utf8'
