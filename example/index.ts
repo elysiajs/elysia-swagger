@@ -1,7 +1,5 @@
-import { Elysia, InternalRoute } from 'elysia'
+import { Elysia } from 'elysia'
 import { swagger } from '../src/index'
-import { plugin } from './plugin'
-import { registerSchemaPath } from '../src/utils'
 
 const app = new Elysia()
     .use(
@@ -39,6 +37,5 @@ const app = new Elysia()
             }
         })
     )
-    // .use(plugin)
     .get('/id/:id?', 'a')
     .listen(3000)

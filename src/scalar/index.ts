@@ -1,6 +1,6 @@
 import scalarElysiaTheme from './theme'
 import type { OpenAPIV3 } from 'openapi-types'
-import type { ReferenceConfiguration } from '@scalar/api-reference'
+import type { ReferenceConfiguration } from '@scalar/types'
 
 export const ScalarRender = (
     info: OpenAPIV3.InfoObject,
