@@ -1,5 +1,5 @@
 import type { OpenAPIV3 } from 'openapi-types'
-import type { ReferenceConfiguration } from '@scalar/api-reference'
+import type { ReferenceConfiguration } from '@scalar/types'
 import type { SwaggerUIOptions } from './swagger/types'
 
 export interface ElysiaSwaggerConfig<Path extends string = '/swagger'> {
@@ -44,7 +44,7 @@ export interface ElysiaSwaggerConfig<Path extends string = '/swagger'> {
     /**
      * Scalar configuration to customize scalar
      *'
-     * @see https://github.com/scalar/scalar
+     * @see https://github.com/scalar/scalar/blob/main/documentation/configuration.md
      */
     scalarConfig?: ReferenceConfiguration
     /**

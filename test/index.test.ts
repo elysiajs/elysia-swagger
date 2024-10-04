@@ -45,11 +45,41 @@ describe('Swagger', () => {
 		).toBe(true)
 	})
 
-	it('follow title and description', async () => {
+	it('follow title and description with Swagger-UI provider', async () => {
 		const app = new Elysia().use(
 			swagger({
 				version: '4.5.0',
 				provider: 'swagger-ui',
+				documentation: {
+					info: {
+						title: 'Elysia Documentation',
+						description: 'Herrscher of Human',
+						version: '1.0.0'
+					}
+				}
+			})
+		)
+
+		await app.modules
+
+		const res = await app.handle(req('/swagger')).then((x) => x.text())
+
+		expect(res.includes('<title>Elysia Documentation</title>')).toBe(true)
+		expect(
+			res.includes(
+				`<meta
+        name="description"
+        content="Herrscher of Human"
+    />`
+			)
+		).toBe(true)
+	})
+
+	it('follow title and description with Scalar provider', async () => {
+		const app = new Elysia().use(
+			swagger({
+				version: '4.5.0',
+				provider: 'scalar',
 				documentation: {
 					info: {
 						title: 'Elysia Documentation',
