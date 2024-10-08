@@ -124,6 +124,8 @@ export const registerSchemaPath = ({
 	hook?: LocalHook<any, any, any, any, any, any, any>
 	models: Record<string, TSchema>
 }) => {
+	hook = cloneHook(hook)
+
 	const contentType = hook?.type ?? [
 		'application/json',
 		'multipart/form-data',
