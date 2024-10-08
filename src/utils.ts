@@ -69,7 +69,9 @@ const mapTypesResponse = (
 
 	const responses: Record<string, OpenAPIV3.MediaTypeObject> = {}
 
-	for (const type of types)
+	for (const type of types) {
+		// console.log(schema)
+
 		responses[type] = {
 			schema:
 				typeof schema === 'string'
@@ -78,6 +80,7 @@ const mapTypesResponse = (
 						}
 					: { ...(schema as any) }
 		}
+	}
 
 	return responses
 }
@@ -101,6 +104,12 @@ export const generateOperationId = (method: string, paths: string) => {
 	return operationId
 }
 
+const cloneHook = <T>(hook: T) => {
+	if (!hook) return
+
+	return { ...hook }
+}
+
 export const registerSchemaPath = ({
 	schema,
 	path,
@@ -114,7 +123,7 @@ export const registerSchemaPath = ({
 	method: HTTPMethod
 	hook?: LocalHook<any, any, any, any, any, any, any>
 	models: Record<string, TSchema>
-}) => {		
+}) => {
 	const contentType = hook?.type ?? [
 		'application/json',
 		'multipart/form-data',
@@ -126,13 +135,13 @@ export const registerSchemaPath = ({
 	const contentTypes =
 		typeof contentType === 'string'
 			? [contentType]
-			: contentType ?? ['application/json']
+			: (contentType ?? ['application/json'])
 
-	const bodySchema = hook?.body
-	const paramsSchema = hook?.params
-	const headerSchema = hook?.headers
-	const querySchema = hook?.query
-	let responseSchema = hook?.response as unknown as OpenAPIV3.ResponsesObject
+	const bodySchema = cloneHook(hook?.body)
+	const paramsSchema = cloneHook(hook?.params)
+	const headerSchema = cloneHook(hook?.headers)
+	const querySchema = cloneHook(hook?.query)
+	let responseSchema: OpenAPIV3.ResponsesObject = cloneHook(hook?.response)
 
 	if (typeof responseSchema === 'object') {
 		if (Kind in responseSchema) {
@@ -292,36 +301,36 @@ export const registerSchemaPath = ({
 }
 
 export const filterPaths = (
-    paths: Record<string, any>,
-    docsPath: string,
-    {
-        excludeStaticFile = true,
-        exclude = []
-    }: {
-        excludeStaticFile: boolean
-        exclude: (string | RegExp)[]
-    }
+	paths: Record<string, any>,
+	docsPath: string,
+	{
+		excludeStaticFile = true,
+		exclude = []
+	}: {
+		excludeStaticFile: boolean
+		exclude: (string | RegExp)[]
+	}
 ) => {
 	const newPaths: Record<string, any> = {}
 
-    // exclude docs path and OpenAPI json path
-    const excludePaths = [`/${docsPath}`, `/${docsPath}/json`].map((p) =>
+	// exclude docs path and OpenAPI json path
+	const excludePaths = [`/${docsPath}`, `/${docsPath}/json`].map((p) =>
 		normalize(p)
 	)
 
-    for (const [key, value] of Object.entries(paths))
-        if (
-            !exclude.some((x) => {
-                if (typeof x === 'string') return key === x
+	for (const [key, value] of Object.entries(paths))
+		if (
+			!exclude.some((x) => {
+				if (typeof x === 'string') return key === x
 
-                return x.test(key)
-            }) &&
-            !excludePaths.includes(key) &&
-            !key.includes('*') &&
-            (excludeStaticFile ? !key.includes('.') : true)
-        ) {
-            Object.keys(value).forEach((method) => {
-                const schema = value[method]
+				return x.test(key)
+			}) &&
+			!excludePaths.includes(key) &&
+			!key.includes('*') &&
+			(excludeStaticFile ? !key.includes('.') : true)
+		) {
+			Object.keys(value).forEach((method) => {
+				const schema = value[method]
 
 				if (key.includes('{')) {
 					if (!schema.parameters) schema.parameters = []

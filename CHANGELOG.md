@@ -1,3 +1,7 @@
+# 1.1.14 - 9 Oct 2024
+Bug fix:
+- Fix duplicate object reference
+
 # 1.1.2 - 5 Sep 2024
 Feature:
 - add provenance publish
