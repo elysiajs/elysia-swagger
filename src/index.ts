@@ -62,11 +62,13 @@ export const swagger = async <Path extends string = '/swagger'>(
 
 	const relativePath = path.startsWith('/') ? path.slice(1) : path
 
+	const openAPISpecUrl = relativePath === '' ? `/json` : `/${relativePath}/json`
+
 	const app = new Elysia({ name: '@elysiajs/swagger' })
 
 	app.get(path, function documentation() {
 		const combinedSwaggerOptions = {
-			url: `/${relativePath}/json`,
+			url: openAPISpecUrl,
 			dom_id: '#swagger-ui',
 			...swaggerOptions
 		}
@@ -83,7 +85,7 @@ export const swagger = async <Path extends string = '/swagger'>(
 		const scalarConfiguration: ReferenceConfiguration = {
 			spec: {
 				...scalarConfig.spec,
-				url: `/${relativePath}/json`
+				url: openAPISpecUrl
 			},
 			...scalarConfig
 		}
