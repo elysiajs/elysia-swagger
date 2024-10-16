@@ -22,9 +22,9 @@ export interface ElysiaSwaggerConfig<Path extends string = '/swagger'> {
      */
     provider?: 'scalar' | 'swagger-ui'
     /**
-     * Choose your provider, Scalar or Swagger UI
+     * Base route for framework integrations
      *
-     * @default 'scalar'
+     * @default '/'
      * @see https://github.com/scalar/scalar
      * @see https://github.com/swagger-api/swagger-ui
      */
