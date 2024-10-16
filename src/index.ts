@@ -24,7 +24,7 @@ export const swagger = async <Path extends string = '/swagger'>({
 		documentation = {},
 		version = '5.9.0',
 		excludeStaticFile = true,
-		path = slug + 'swagger' as Path,
+		path = 'swagger' as Path,
 		exclude = [],
 		swaggerOptions = {},
 		theme = `https://unpkg.com/swagger-ui-dist@${version}/swagger-ui.css`,
