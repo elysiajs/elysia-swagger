@@ -15,8 +15,8 @@ import type { ElysiaSwaggerConfig } from './types'
  *
  * @see https://github.com/elysiajs/elysia-swagger
  */
-export const swagger = async <Path extends string = '/swagger'>(
-	{
+export const swagger = async <Path extends string = '/swagger'>({
+		slug = "/", //api/
 		provider = 'scalar',
 		scalarVersion = 'latest',
 		scalarCDN = '',
@@ -24,7 +24,7 @@ export const swagger = async <Path extends string = '/swagger'>(
 		documentation = {},
 		version = '5.9.0',
 		excludeStaticFile = true,
-		path = '/swagger' as Path,
+		path = slug + 'swagger' as Path,
 		exclude = [],
 		swaggerOptions = {},
 		theme = `https://unpkg.com/swagger-ui-dist@${version}/swagger-ui.css`,
@@ -32,6 +32,7 @@ export const swagger = async <Path extends string = '/swagger'>(
 		excludeMethods = ['OPTIONS'],
 		excludeTags = []
 	}: ElysiaSwaggerConfig<Path> = {
+		slug: "/", // api/ -> Forexample
 		provider: 'scalar',
 		scalarVersion: 'latest',
 		scalarCDN: '',
@@ -39,7 +40,7 @@ export const swagger = async <Path extends string = '/swagger'>(
 		documentation: {},
 		version: '5.9.0',
 		excludeStaticFile: true,
-		path: '/swagger' as Path,
+		path: 'swagger' as Path,
 		exclude: [],
 		swaggerOptions: {},
 		autoDarkMode: true,
@@ -59,8 +60,7 @@ export const swagger = async <Path extends string = '/swagger'>(
 		version: '0.0.0',
 		...documentation.info
 	}
-
-	const relativePath = path.startsWith('/') ? path.slice(1) : path
+	const relativePath = (slug + path).startsWith('/') ? path.slice(1) : path
 
 	const app = new Elysia({ name: '@elysiajs/swagger' })
 

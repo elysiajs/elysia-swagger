@@ -22,6 +22,14 @@ export interface ElysiaSwaggerConfig<Path extends string = '/swagger'> {
      */
     provider?: 'scalar' | 'swagger-ui'
     /**
+     * Choose your provider, Scalar or Swagger UI
+     *
+     * @default 'scalar'
+     * @see https://github.com/scalar/scalar
+     * @see https://github.com/swagger-api/swagger-ui
+     */
+    slug?: string
+    /**
      * Version to use for Scalar cdn bundle
      *
      * @default 'latest'
