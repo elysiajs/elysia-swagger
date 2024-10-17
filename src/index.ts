@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Elysia, type InternalRoute } from 'elysia'
+import { resolve } from 'node:path';
 
 import { SwaggerUIRender } from './swagger'
 import { ScalarRender } from './scalar'
@@ -64,9 +65,9 @@ export const swagger = async <Path extends string = '/swagger'>(
 
 	const app = new Elysia({ name: '@elysiajs/swagger' })
 
-	app.get(path, function documentation() {
+	app.get(path, function documentation({ path: reqPath }) {
 		const combinedSwaggerOptions = {
-			url: `/${relativePath}/json`,
+			url: resolve(reqPath, '/json'),
 			dom_id: '#swagger-ui',
 			...swaggerOptions
 		}
@@ -83,7 +84,7 @@ export const swagger = async <Path extends string = '/swagger'>(
 		const scalarConfiguration: ReferenceConfiguration = {
 			spec: {
 				...scalarConfig.spec,
-				url: `/${relativePath}/json`
+				url: resolve(reqPath, '/json')
 			},
 			...scalarConfig,
 			// so we can showcase the elysia theme
