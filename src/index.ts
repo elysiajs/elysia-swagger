@@ -62,7 +62,8 @@ export const swagger = async <Path extends string = '/swagger'>(
 	}
 
 	const app = new Elysia({ name: '@elysiajs/swagger' })
-	const prefixedPath = join(app.config.prefix ?? "/", path)
+	const appPrefix = app.config.prefix ?? "/"
+	const prefixedPath = join(appPrefix, path)
 
 	app.get(path, function documentation(request) {
 		// External Prefix, if the app is behind a reverse proxy
@@ -137,7 +138,7 @@ export const swagger = async <Path extends string = '/swagger'>(
 							schema,
 							hook: route.hooks,
 							method,
-							path: join(extPrefix, prefixedPath, route.path),
+							path: join(extPrefix, appPrefix, route.path),
 							// @ts-ignore
 							models: app.definitions?.type,
 							contentType: route.hooks.type
@@ -150,7 +151,7 @@ export const swagger = async <Path extends string = '/swagger'>(
 					schema,
 					hook: route.hooks,
 					method: route.method,
-					path: join(extPrefix, prefixedPath, route.path),
+					path: join(extPrefix, appPrefix, route.path),
 					// @ts-ignore
 					models: app.definitions?.type,
 					contentType: route.hooks.type
