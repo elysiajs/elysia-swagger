@@ -134,7 +134,7 @@ export const swagger = async <Path extends string = '/swagger'>(
 							schema,
 							hook: route.hooks,
 							method,
-							path: route.path,
+							path: join(extPrefix, prefixedPath, route.path),
 							// @ts-ignore
 							models: app.definitions?.type,
 							contentType: route.hooks.type
@@ -147,7 +147,7 @@ export const swagger = async <Path extends string = '/swagger'>(
 					schema,
 					hook: route.hooks,
 					method: route.method,
-					path: route.path,
+					path: join(extPrefix, prefixedPath, route.path),
 					// @ts-ignore
 					models: app.definitions?.type,
 					contentType: route.hooks.type
