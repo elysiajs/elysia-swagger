@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Elysia, type InternalRoute } from 'elysia'
-import { resolve } from 'node:path';
 
 import { SwaggerUIRender } from './swagger'
 import { ScalarRender } from './scalar'
@@ -10,6 +9,7 @@ import { filterPaths, registerSchemaPath } from './utils'
 import type { OpenAPIV3 } from 'openapi-types'
 import type { ReferenceConfiguration } from '@scalar/types'
 import type { ElysiaSwaggerConfig } from './types'
+import { join } from 'pathe';
 
 /**
  * Plugin for [elysia](https://github.com/elysiajs/elysia) that auto-generate Swagger page.
@@ -61,13 +61,17 @@ export const swagger = async <Path extends string = '/swagger'>(
 		...documentation.info
 	}
 
-	const relativePath = path.startsWith('/') ? path.slice(1) : path
-
 	const app = new Elysia({ name: '@elysiajs/swagger' })
+	const prefixedPath = join(app.config.prefix ?? "/", path)
 
-	app.get(path, function documentation({ path: reqPath }) {
+	app.get(path, function documentation(request) {
+		// External Prefix, if the app is behind a reverse proxy
+		// For example in Traefik, the prefix is set in the header `X-Forwarded-Prefix`
+		const extPrefix = request.headers["x-forwarded-prefix"] ?? "/"
+		const relativePath = join(extPrefix, prefixedPath)
+
 		const combinedSwaggerOptions = {
-			url: resolve(reqPath, '/json'),
+			url: relativePath,
 			dom_id: '#swagger-ui',
 			...swaggerOptions
 		}
@@ -84,7 +88,7 @@ export const swagger = async <Path extends string = '/swagger'>(
 		const scalarConfiguration: ReferenceConfiguration = {
 			spec: {
 				...scalarConfig.spec,
-				url: resolve(reqPath, '/json')
+				url: relativePath
 			},
 			...scalarConfig,
 			// so we can showcase the elysia theme
@@ -108,7 +112,12 @@ export const swagger = async <Path extends string = '/swagger'>(
 				}
 			}
 		)
-	}).get(path === '/' ? '/json' : `${path}/json`, function openAPISchema() {
+	}).get(path === '/' ? '/json' : `${path}/json`, function openAPISchema(request) {
+		// External Prefix, if the app is behind a reverse proxy
+		// For example in Traefik, the prefix is set in the header `X-Forwarded-Prefix`
+		const extPrefix = request.headers["x-forwarded-prefix"] ?? "/"
+		const relativePath = join(extPrefix, prefixedPath)
+
 		// @ts-expect-error Private property
 		const routes = app.getGlobalRoutes() as InternalRoute[]
 
