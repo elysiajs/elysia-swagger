@@ -317,7 +317,7 @@ export const filterPaths = (
 	const newPaths: Record<string, any> = {}
 
 	// exclude docs path and OpenAPI json path
-	const excludePaths = [`/${docsPath}`, `/${docsPath}/json`].map((p) =>
+	const excludePaths = [`${docsPath}`, `${docsPath}/json`].map((p) =>
 		normalize(p)
 	)
 
