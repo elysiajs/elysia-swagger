@@ -68,7 +68,7 @@ export const swagger = async <Path extends string = '/swagger'>(
 		// External Prefix, if the app is behind a reverse proxy
 		// For example in Traefik, the prefix is set in the header `X-Forwarded-Prefix`
 		const extPrefix = request.headers["x-forwarded-prefix"] ?? "/"
-		const relativePath = join(extPrefix, prefixedPath)
+		const relativePath = join(extPrefix, prefixedPath, "json")
 
 		const combinedSwaggerOptions = {
 			url: relativePath,
