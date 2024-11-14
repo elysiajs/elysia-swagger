@@ -1,46 +1,35 @@
 import { Elysia } from 'elysia'
 import { swagger } from '../src/index'
-import { plugin } from './plugin'
+
+const firstApp = new Elysia({ prefix: '/first' })
+
+firstApp
+	.get('/first-route', () => {
+		return 'first route!'
+	})
+	.use(
+		swagger({
+			path: '/first-doc',
+			routes: firstApp.routes
+		})
+	)
+
+const secondApp = new Elysia({ prefix: '/second' })
+
+secondApp
+	.get('/second-route', () => {
+		return 'second route!'
+	})
+	.use(
+		swagger({
+			path: '/second-doc',
+			routes: secondApp.routes
+		})
+	)
 
 const app = new Elysia({
-    // aot: false
+	// aot: false
 })
-    .use(
-        swagger({
-            documentation: {
-                info: {
-                    title: 'Elysia',
-                    version: '0.6.10'
-                },
-                tags: [
-                    {
-                        name: 'Test',
-                        description: 'Hello'
-                    }
-                ],
-                security: [
-                    {JwtAuth: []}
-                ],
-                components: {
-                    schemas: {
-                        User: {
-                            description: 'string'
-                        }
-                    },
-                    securitySchemes: {
-                        JwtAuth: {
-                            type: 'http',
-                            scheme: 'bearer',
-                            bearerFormat: 'JWT',
-                            description: 'Enter JWT Bearer token **_only_**'
-                        }
-                    }
-                }
-            },
-            swaggerOptions: {
-                persistAuthorization: true
-            },
-        })
-    )
-    .use(plugin)
-    .listen(3000)
+	.use(firstApp)
+	.use(secondApp)
+	.listen(3000)
