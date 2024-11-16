@@ -1,4 +1,8 @@
-# 1.1.14 - 9 Oct 2024
+# 1.1.6 - 17 Nov 2024
+Bug fix:
+- [#156](https://github.com/elysiajs/elysia-swagger/pull/156) add type check in cloneHook
+
+# 1.1.4 - 9 Oct 2024
 Bug fix:
 - Fix duplicate object reference
 
