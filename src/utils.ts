@@ -106,7 +106,8 @@ export const generateOperationId = (method: string, paths: string) => {
 
 const cloneHook = <T>(hook: T) => {
 	if (!hook) return
-
+	if (typeof hook === 'string') return hook
+	if (Array.isArray(hook)) return [...hook]
 	return { ...hook }
 }
 
