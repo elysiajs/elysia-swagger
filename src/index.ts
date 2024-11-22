@@ -85,7 +85,9 @@ export const swagger = async <Path extends string = '/swagger'>(
 				...scalarConfig.spec,
 				url: `/${relativePath}/json`
 			},
-			...scalarConfig
+			...scalarConfig,
+			// @ts-expect-error
+			_integration: 'elysiajs'
 		}
 
 		return new Response(

@@ -1,5 +1,7 @@
 import { Elysia } from 'elysia'
 import { swagger } from '../src/index'
+import { cors } from '@elysiajs/cors'
+
 
 const app = new Elysia()
     .use(
@@ -37,5 +39,6 @@ const app = new Elysia()
             }
         })
     )
+    .use(cors())
     .get('/id/:id?', 'a')
     .listen(3000)
