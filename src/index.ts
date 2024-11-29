@@ -9,6 +9,7 @@ import { filterPaths, registerSchemaPath } from './utils'
 import type { OpenAPIV3 } from 'openapi-types'
 import type { ReferenceConfiguration } from '@scalar/types'
 import type { ElysiaSwaggerConfig } from './types'
+import { join } from 'pathe';
 
 /**
  * Plugin for [elysia](https://github.com/elysiajs/elysia) that auto-generate Swagger page.
@@ -60,13 +61,18 @@ export const swagger = async <Path extends string = '/swagger'>(
 		...documentation.info
 	}
 
-	const relativePath = path.startsWith('/') ? path.slice(1) : path
-
 	const app = new Elysia({ name: '@elysiajs/swagger' })
+	const appPrefix = app.config.prefix ?? "/"
+	const prefixedPath = join(appPrefix, path)
 
-	app.get(path, function documentation() {
+	app.get(path, function documentation(request) {
+		// External Prefix, if the app is behind a reverse proxy
+		// For example in Traefik, the prefix is set in the header `X-Forwarded-Prefix`
+		const extPrefix = request.headers["x-forwarded-prefix"] ?? "/"
+		const relativePath = join(extPrefix, prefixedPath, "json")
+
 		const combinedSwaggerOptions = {
-			url: `/${relativePath}/json`,
+			url: relativePath,
 			dom_id: '#swagger-ui',
 			...swaggerOptions
 		}
@@ -83,7 +89,7 @@ export const swagger = async <Path extends string = '/swagger'>(
 		const scalarConfiguration: ReferenceConfiguration = {
 			spec: {
 				...scalarConfig.spec,
-				url: `/${relativePath}/json`
+				url: relativePath
 			},
 			...scalarConfig,
 			// so we can showcase the elysia theme
@@ -107,7 +113,12 @@ export const swagger = async <Path extends string = '/swagger'>(
 				}
 			}
 		)
-	}).get(path === '/' ? '/json' : `${path}/json`, function openAPISchema() {
+	}).get(path === '/' ? '/json' : `${path}/json`, function openAPISchema(request) {
+		// External Prefix, if the app is behind a reverse proxy
+		// For example in Traefik, the prefix is set in the header `X-Forwarded-Prefix`
+		const extPrefix = request.headers["x-forwarded-prefix"] ?? "/"
+		const relativePath = join(extPrefix, prefixedPath)
+
 		// @ts-expect-error Private property
 		const routes = app.getGlobalRoutes() as InternalRoute[]
 
@@ -127,7 +138,7 @@ export const swagger = async <Path extends string = '/swagger'>(
 							schema,
 							hook: route.hooks,
 							method,
-							path: route.path,
+							path: join(extPrefix, appPrefix, route.path),
 							// @ts-ignore
 							models: app.definitions?.type,
 							contentType: route.hooks.type
@@ -140,7 +151,7 @@ export const swagger = async <Path extends string = '/swagger'>(
 					schema,
 					hook: route.hooks,
 					method: route.method,
-					path: route.path,
+					path: join(extPrefix, appPrefix, route.path),
 					// @ts-ignore
 					models: app.definitions?.type,
 					contentType: route.hooks.type
