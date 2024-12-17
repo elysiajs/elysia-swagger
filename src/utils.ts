@@ -24,28 +24,29 @@ export const mapProperties = (
 	name: string,
 	schema: TSchema | string | undefined,
 	models: Record<string, TSchema>
-) => {
+): (OpenAPIV3.ReferenceObject | OpenAPIV3.ParameterObject)[] => {
 	if (schema === undefined) return []
 
-	if (typeof schema === 'string')
+	if (typeof schema === 'string') {
 		if (schema in models) schema = models[schema]
 		else throw new Error(`Can't find model ${schema}`)
+	}
 
-	return Object.entries(schema?.properties ?? []).map(([key, value]) => {
+	// this is used by parameters (query, headers...) and we only support
+	// object like schemas.
+	return Object.entries(schema?.properties as Record<string, TSchema> ?? []).map(([key, value]) => {
 		const {
 			type: valueType = undefined,
 			description,
 			examples,
 			...schemaKeywords
-		} = value as any
+		} = value;
 		return {
-			// @ts-ignore
 			description,
 			examples,
 			schema: { type: valueType, ...schemaKeywords },
 			in: name,
 			name: key,
-			// @ts-ignore
 			required: schema!.required?.includes(key) ?? false
 		}
 	})
@@ -53,13 +54,7 @@ export const mapProperties = (
 
 const mapTypesResponse = (
 	types: string[],
-	schema:
-		| string
-		| {
-				type: string
-				properties: Object
-				required: string[]
-		  }
+	schema: string | TSchema
 ) => {
 	if (
 		typeof schema === 'object' &&
@@ -70,15 +65,11 @@ const mapTypesResponse = (
 	const responses: Record<string, OpenAPIV3.MediaTypeObject> = {}
 
 	for (const type of types) {
-		// console.log(schema)
-
 		responses[type] = {
 			schema:
 				typeof schema === 'string'
-					? {
-							$ref: `#/components/schemas/${schema}`
-						}
-					: { ...(schema as any) }
+					? { $ref: `#/components/schemas/${schema}` }
+					: schema
 		}
 	}
 
@@ -148,118 +139,39 @@ export const registerSchemaPath = ({
 
 	if (typeof responseSchema === 'object') {
 		if (Kind in responseSchema) {
-			const {
-				type,
-				properties,
-				required,
-				additionalProperties,
-				patternProperties,
-				...rest
-			} = responseSchema as typeof responseSchema & {
-				type: string
-				properties: Object
-				required: string[]
-			}
-
+			const value = responseSchema as TSchema;
 			responseSchema = {
 				'200': {
-					...rest,
-					description: rest.description as any,
-					content: mapTypesResponse(
-						contentTypes,
-						type === 'object' || type === 'array'
-							? ({
-									type,
-									properties,
-									patternProperties,
-									items: responseSchema.items,
-									required
-								} as any)
-							: responseSchema
-					)
+					description: value.description ?? "",
+					headers: value.headers,
+					content: mapTypesResponse(contentTypes, value),
+					links: value.links,
 				}
 			}
 		} else {
-			Object.entries(responseSchema as Record<string, TSchema>).forEach(
+			Object.entries(responseSchema as Record<string, TSchema | string>).forEach(
 				([key, value]) => {
-					if (typeof value === 'string') {
-						if (!models[value]) return
-
-						// eslint-disable-next-line @typescript-eslint/no-unused-vars
-						const {
-							type,
-							properties,
-							required,
-							additionalProperties: _1,
-							patternProperties: _2,
-							...rest
-						} = models[value] as TSchema & {
-							type: string
-							properties: Object
-							required: string[]
-						}
-
-						responseSchema[key] = {
-							...rest,
-							description: rest.description as any,
-							content: mapTypesResponse(contentTypes, value)
-						}
-					} else {
-						const {
-							type,
-							properties,
-							required,
-							additionalProperties,
-							patternProperties,
-							...rest
-						} = value as typeof value & {
-							type: string
-							properties: Object
-							required: string[]
-						}
-
-						responseSchema[key] = {
-							...rest,
-							description: rest.description as any,
-							content: mapTypesResponse(
-								contentTypes,
-								type === 'object' || type === 'array'
-									? ({
-											type,
-											properties,
-											patternProperties,
-											items: value.items,
-											required
-										} as any)
-									: value
-							)
-						}
+					const model = typeof value === 'string' ? models[value] : value;
+					if (!model) return;
+					responseSchema[key] = {
+						description: model.description ?? "",
+						headers: model.headers,
+						links: model.links,
+						content: mapTypesResponse(contentTypes, model),
 					}
 				}
 			)
 		}
 	} else if (typeof responseSchema === 'string') {
-		if (!(responseSchema in models)) return
-
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const {
-			type,
-			properties,
-			required,
-			additionalProperties: _1,
-			patternProperties: _2,
-			...rest
-		} = models[responseSchema] as TSchema & {
-			type: string
-			properties: Object
-			required: string[]
-		}
+		const value = models[responseSchema];
+		if (!value) return
 
 		responseSchema = {
-			// @ts-ignore
 			'200': {
-				...rest,
-				content: mapTypesResponse(contentTypes, responseSchema)
+				description: value.description ?? "",
+				headers: value.headers,
+				links: value.links,
+				content: mapTypesResponse(contentTypes, value)
 			}
 		}
 	}
@@ -273,33 +185,15 @@ export const registerSchemaPath = ({
 	schema[path] = {
 		...(schema[path] ? schema[path] : {}),
 		[method.toLowerCase()]: {
-			...((headerSchema || paramsSchema || querySchema || bodySchema
-				? ({ parameters } as any)
-				: {}) satisfies OpenAPIV3.ParameterObject),
-			...(responseSchema
-				? {
-						responses: responseSchema
-					}
-				: {}),
-			operationId:
-				hook?.detail?.operationId ?? generateOperationId(method, path),
+			parameters,
+			responses: responseSchema,
+			operationId: hook?.detail?.operationId ?? generateOperationId(method, path),
 			...hook?.detail,
-			...(bodySchema
-				? {
-						requestBody: {
-							required: true,
-							content: mapTypesResponse(
-								contentTypes,
-								typeof bodySchema === 'string'
-									? {
-											$ref: `#/components/schemas/${bodySchema}`
-										}
-									: (bodySchema as any)
-							)
-						}
-					}
-				: null)
-		} satisfies OpenAPIV3.OperationObject
+			requestBody: bodySchema ? {
+				required: true,
+				content: mapTypesResponse(contentTypes, bodySchema)
+			} : undefined,
+		}
 	}
 }
 
