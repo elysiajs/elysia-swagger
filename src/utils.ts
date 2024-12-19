@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { normalize } from 'pathe'
 import type { HTTPMethod, LocalHook } from 'elysia'
 
@@ -36,19 +34,33 @@ export const mapProperties = (
 	// object like schemas.
 	return Object.entries(schema?.properties as Record<string, TSchema> ?? []).map(([key, value]) => {
 		const {
-			type: valueType = undefined,
 			description,
+			deprecated,
+			allowEmptyValue,
+			style,
+			explode,
+			allowReserved,
+			example,
 			examples,
-			...schemaKeywords
+			...schemaVal
 		} = value;
+		let required = schema!.required?.includes(key) ?? false;
+		if ("default" in schemaVal) required = false;
+
 		return {
-			description,
-			examples,
-			schema: { type: valueType, ...schemaKeywords },
-			in: name,
 			name: key,
-			required: schema!.required?.includes(key) ?? false
-		}
+			in: name,
+			description,
+			required,
+			deprecated,
+			allowEmptyValue,
+			style,
+			explode,
+			allowReserved,
+			example,
+			examples,
+			schema: schemaVal,
+		} satisfies OpenAPIV3.ParameterObject;
 	})
 }
 
