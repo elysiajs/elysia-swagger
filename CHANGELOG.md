@@ -1,3 +1,8 @@
+
+# 1.2.0-rc.0 - 23 Dec 2024
+Change:
+- Add support for Elysia 1.2
+
 # 1.1.6 - 17 Nov 2024
 Bug fix:
 - [#156](https://github.com/elysiajs/elysia-swagger/pull/156) add type check in cloneHook

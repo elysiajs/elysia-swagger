@@ -122,7 +122,7 @@ export const registerSchemaPath = ({
 	contentType?: string | string[]
 	path: string
 	method: HTTPMethod
-	hook?: LocalHook<any, any, any, any, any, any, any>
+	hook?: LocalHook<any, any, any, any, any, any>
 	models: Record<string, TSchema>
 }) => {
 	hook = cloneHook(hook)
