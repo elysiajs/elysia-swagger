@@ -276,4 +276,21 @@ describe('Swagger', () => {
 		expect(response.paths['/invalid']).toBeUndefined();
 
 	})
+
+	it('should work with defined models', async () => {
+		const app = new Elysia().use(swagger())
+			.model({"test": t.Integer()})
+			.get("/valid", 12, { response: { 200: "test" } });
+
+		await app.modules
+
+		const res = await app.handle(req('/swagger/json'))
+		expect(res.status).toBe(200)
+		const response = await res.json()
+		expect(response.paths['/valid'].get.responses["200"].content["application/json"].schema.type)
+			.toBe("integer");
+		expect(response.components.schemas.test.type).toBe("integer");
+		await SwaggerParser.validate(response).catch((err) => fail(err))
+
+	})
 })
