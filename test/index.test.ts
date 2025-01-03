@@ -304,12 +304,12 @@ describe('Swagger', () => {
 				{
 					format: 'date',
 					type: 'string',
-					default: expect.any(String) // this is the correct syntax
+					default: expect.any(String)
 				},
 				{
 					format: 'date-time',
 					type: 'string',
-					default: expect.any(String) // this is the correct syntax
+					default: expect.any(String)
 				},
 				{
 					type: 'number'
