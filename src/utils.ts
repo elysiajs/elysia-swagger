@@ -30,7 +30,6 @@ export const mapProperties = (
 	if (typeof schema === 'string')
 		if (schema in models) schema = models[schema]
 		else throw new Error(`Can't find model ${schema}`)
-
 	return Object.entries(schema?.properties ?? []).map(([key, value]) => {
 		const {
 			type: valueType = undefined,
@@ -70,15 +69,14 @@ const mapTypesResponse = (
 	const responses: Record<string, OpenAPIV3.MediaTypeObject> = {}
 
 	for (const type of types) {
-		// console.log(schema)
-
 		responses[type] = {
-			schema:
+			schema: cleanDateType(
 				typeof schema === 'string'
 					? {
 							$ref: `#/components/schemas/${schema}`
 						}
 					: { ...(schema as any) }
+			)
 		}
 	}
 
@@ -108,6 +106,7 @@ const cloneHook = <T>(hook: T) => {
 	if (!hook) return
 	if (typeof hook === 'string') return hook
 	if (Array.isArray(hook)) return [...hook]
+
 	return { ...hook }
 }
 
@@ -371,4 +370,36 @@ export const filterPaths = (
 		}
 
 	return newPaths
+}
+
+const cleanDateType = (schema: any): any => {
+	if (!schema) return schema
+
+	if (schema.anyOf && schema.anyOf.some((x: any) => x.type === 'Date')) {
+		return {
+			...schema,
+			anyOf: schema.anyOf.filter((x: any) => x.type !== 'Date')
+		}
+	}
+
+	if (schema.type === 'object' && schema.properties) {
+		return {
+			...schema,
+			properties: Object.fromEntries(
+				Object.entries(schema.properties).map(([key, value]) => [
+					key,
+					cleanDateType(value)
+				])
+			)
+		}
+	}
+
+	if (schema.type === 'array' && schema.items) {
+		return {
+			...schema,
+			items: cleanDateType(schema.items)
+		}
+	}
+
+	return schema
 }

@@ -232,27 +232,27 @@ describe('Swagger', () => {
 	})
 
 	it('should hide routes with hide = true from paths', async () => {
-		const app = new Elysia().use(swagger())
-			.get("/public", "omg")
+		const app = new Elysia()
+			.use(swagger())
+			.get('/public', 'omg')
 			.guard({
 				detail: {
 					hide: true
 				}
 			})
-			.get("/hidden", "ok")
+			.get('/hidden', 'ok')
 
 		await app.modules
 
 		const res = await app.handle(req('/swagger/json'))
 		expect(res.status).toBe(200)
 		const response = await res.json()
-		expect(response.paths['/public']).not.toBeUndefined();
-		expect(response.paths['/hidden']).toBeUndefined();
+		expect(response.paths['/public']).not.toBeUndefined()
+		expect(response.paths['/hidden']).toBeUndefined()
 	})
 
 	it('should expand .all routes', async () => {
-		const app = new Elysia().use(swagger())
-			.all("/all", "woah")
+		const app = new Elysia().use(swagger()).all('/all', 'woah')
 
 		await app.modules
 
@@ -263,17 +263,75 @@ describe('Swagger', () => {
 	})
 
 	it('should hide routes that are invalid', async () => {
-		const app = new Elysia().use(swagger())
-			.get("/valid", "ok")
-			.route("LOCK", "/invalid", "nope")
+		const app = new Elysia()
+			.use(swagger())
+			.get('/valid', 'ok')
+			.route('LOCK', '/invalid', 'nope')
 
 		await app.modules
 
 		const res = await app.handle(req('/swagger/json'))
 		expect(res.status).toBe(200)
 		const response = await res.json()
-		expect(response.paths['/valid']).not.toBeUndefined();
-		expect(response.paths['/invalid']).toBeUndefined();
+		expect(response.paths['/valid']).not.toBeUndefined()
+		expect(response.paths['/invalid']).toBeUndefined()
+	})
 
+	it('should properly format date-time fields in schema', async () => {
+		const app = new Elysia().use(swagger()).post('/user', () => {}, {
+			body: t.Object({
+				name: t.String(),
+				createdAt: t.Date(),
+				metadata: t.Object({
+					updatedAt: t.Date()
+				}),
+				history: t.Array(
+					t.Object({
+						timestamp: t.Date()
+					})
+				)
+			})
+		})
+
+		await app.modules
+
+		const res = await app.handle(req('/swagger/json'))
+		expect(res.status).toBe(200)
+		const response = await res.json()
+
+		const expectedDateFormat = {
+			anyOf: [
+				{
+					format: 'date',
+					type: 'string',
+					default: expect.any(String) // this is the correct syntax
+				},
+				{
+					format: 'date-time',
+					type: 'string',
+					default: expect.any(String) // this is the correct syntax
+				},
+				{
+					type: 'number'
+				}
+			]
+		}
+
+		// Check root level date
+		expect(
+			response.paths['/user'].post.requestBody.content['application/json']
+				.schema.properties.createdAt
+		).toMatchObject(expectedDateFormat)
+
+		// Check nested date in object
+		expect(
+			response.paths['/user'].post.requestBody.content['application/json']
+				.schema.properties.metadata.properties.updatedAt
+		).toMatchObject(expectedDateFormat)
+		// Check date in array items
+		expect(
+			response.paths['/user'].post.requestBody.content['application/json']
+				.schema.properties.history.items.properties.timestamp
+		).toMatchObject(expectedDateFormat)
 	})
 })
