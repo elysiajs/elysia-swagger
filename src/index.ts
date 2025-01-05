@@ -15,7 +15,7 @@ import type { ElysiaSwaggerConfig } from './types'
  *
  * @see https://github.com/elysiajs/elysia-swagger
  */
-export const swagger = async <Path extends string = '/swagger'>(
+export const swagger = <Path extends string = '/swagger'>(
 	{
 		provider = 'scalar',
 		scalarVersion = 'latest',
@@ -87,7 +87,6 @@ export const swagger = async <Path extends string = '/swagger'>(
 			},
 			...scalarConfig,
 			// so we can showcase the elysia theme
-			// @ts-expect-error
 			_integration: 'elysiajs'
 		}
 
