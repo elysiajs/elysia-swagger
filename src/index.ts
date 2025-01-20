@@ -30,7 +30,8 @@ export const swagger = async <Path extends string = '/swagger'>(
 		theme = `https://unpkg.com/swagger-ui-dist@${version}/swagger-ui.css`,
 		autoDarkMode = true,
 		excludeMethods = ['OPTIONS'],
-		excludeTags = []
+		excludeTags = [],
+		routes
 	}: ElysiaSwaggerConfig<Path> = {
 		provider: 'scalar',
 		scalarVersion: 'latest',
@@ -101,8 +102,13 @@ export const swagger = async <Path extends string = '/swagger'>(
 						theme,
 						stringifiedSwaggerOptions,
 						autoDarkMode
-					)
-				: ScalarRender(info, scalarVersion, scalarConfiguration, scalarCDN),
+				  )
+				: ScalarRender(
+						info,
+						scalarVersion,
+						scalarConfiguration,
+						scalarCDN
+				  ),
 			{
 				headers: {
 					'content-type': 'text/html; charset=utf8'
@@ -110,18 +116,33 @@ export const swagger = async <Path extends string = '/swagger'>(
 			}
 		)
 	}).get(path === '/' ? '/json' : `${path}/json`, function openAPISchema() {
-		// @ts-expect-error Private property
-		const routes = app.getGlobalRoutes() as InternalRoute[]
+		const allRoutes = routes
+			? [...routes, ...app.routes]
+			: // @ts-expect-error Private property
+			  (app.getGlobalRoutes() as InternalRoute[])
 
-		if (routes.length !== totalRoutes) {
-			const ALLOWED_METHODS = ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS', 'HEAD', 'PATCH', 'TRACE']
-			totalRoutes = routes.length
+		if (allRoutes.length !== totalRoutes) {
+			const ALLOWED_METHODS = [
+				'GET',
+				'PUT',
+				'POST',
+				'DELETE',
+				'OPTIONS',
+				'HEAD',
+				'PATCH',
+				'TRACE'
+			]
+			totalRoutes = allRoutes.length
 
-			routes.forEach((route: InternalRoute) => {
+			allRoutes.forEach((route: InternalRoute) => {
 				if (route.hooks?.detail?.hide === true) return
 				// TODO: route.hooks?.detail?.hide !== false  add ability to hide: false to prevent excluding
 				if (excludeMethods.includes(route.method)) return
-				if (ALLOWED_METHODS.includes(route.method) === false && route.method !== 'ALL') return
+				if (
+					ALLOWED_METHODS.includes(route.method) === false &&
+					route.method !== 'ALL'
+				)
+					return
 
 				if (route.method === 'ALL') {
 					ALLOWED_METHODS.forEach((method) => {
