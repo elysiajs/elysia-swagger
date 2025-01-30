@@ -66,7 +66,7 @@ export const swagger = async <Path extends string = '/swagger'>(
 
 	const app = new Elysia({ name: '@elysiajs/swagger' })
 
-	app.get(path, function documentation() {
+	app.get(path, function documentation({request}) {
 		const combinedSwaggerOptions = {
 			url: openAPISpecUrl,
 			dom_id: '#swagger-ui',
@@ -85,7 +85,7 @@ export const swagger = async <Path extends string = '/swagger'>(
 		const scalarConfiguration: ReferenceConfiguration = {
 			spec: {
 				...scalarConfig.spec,
-				url: openAPISpecUrl
+				url: `${request.url}/json`
 			},
 			...scalarConfig,
 			// so we can showcase the elysia theme
