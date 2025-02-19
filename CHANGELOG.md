@@ -1,5 +1,6 @@
 # 1.2.1 - 19 Feb 2024
 Bug fix:
+- [#154](https://github.com/elysiajs/elysia-swagger/pull/154) prevent failed to fetch spec from URL error
 - [elysia#1063](https://github.com/elysiajs/elysia/issues/1063) Using t.Ref as response schema results in invalid OpenAPI specification
 - handle unfold recursive Ref to schema
 
