@@ -117,7 +117,8 @@ export const swagger = async <Path extends string = '/swagger'>(
 			const ALLOWED_METHODS = ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS', 'HEAD', 'PATCH', 'TRACE']
 			totalRoutes = routes.length
 
-			for(const route of routes) {
+			// forEach create a clone of a route (can't use for-of)
+			routes.forEach((route: InternalRoute) => {
 				if (route.hooks?.detail?.hide === true) return
 				// TODO: route.hooks?.detail?.hide !== false  add ability to hide: false to prevent excluding
 				if (excludeMethods.includes(route.method)) return
@@ -147,7 +148,7 @@ export const swagger = async <Path extends string = '/swagger'>(
 					models: app.definitions?.type,
 					contentType: route.hooks.type
 				})
-			}
+			})
 		}
 
 		return {
