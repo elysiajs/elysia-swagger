@@ -1,3 +1,7 @@
+# 1.2.1 - 19 Feb 2024
+Bug fix:
+- [elysia#1063](https://github.com/elysiajs/elysia/issues/1063) Using t.Ref as response schema results in invalid OpenAPI specification
+- handle unfold recursive Ref to schema
 
 # 1.2.0-rc.0 - 23 Dec 2024
 Change:

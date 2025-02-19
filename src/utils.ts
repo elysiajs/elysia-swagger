@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { normalize } from 'pathe'
-import type { HTTPMethod, LocalHook } from 'elysia'
+import { replaceSchemaType, t, type HTTPMethod, type LocalHook } from 'elysia'
 
 import { Kind, type TSchema } from '@sinclair/typebox'
 import type { OpenAPIV3 } from 'openapi-types'
@@ -70,15 +70,39 @@ const mapTypesResponse = (
 	const responses: Record<string, OpenAPIV3.MediaTypeObject> = {}
 
 	for (const type of types) {
-		// console.log(schema)
-
 		responses[type] = {
 			schema:
 				typeof schema === 'string'
 					? {
 							$ref: `#/components/schemas/${schema}`
 						}
-					: { ...(schema as any) }
+					: '$ref' in schema &&
+						  Kind in schema &&
+						  schema[Kind] === 'Ref'
+						? {
+								...schema,
+								$ref: `#/components/schemas/${schema.$ref}`
+							}
+						: replaceSchemaType(
+								{ ...(schema as any) },
+								{
+									from: t.Ref(''),
+									// @ts-expect-error
+									to: ({ $ref, ...options }) => {
+										if (
+											!$ref.startsWith(
+												'#/components/schemas/'
+											)
+										)
+											return t.Ref(
+												`#/components/schemas/${$ref}`,
+												options
+											)
+
+										return t.Ref($ref, options)
+									}
+								}
+							)
 		}
 	}
 
@@ -154,6 +178,7 @@ export const registerSchemaPath = ({
 				required,
 				additionalProperties,
 				patternProperties,
+				$ref,
 				...rest
 			} = responseSchema as typeof responseSchema & {
 				type: string
@@ -246,6 +271,7 @@ export const registerSchemaPath = ({
 			type,
 			properties,
 			required,
+			$ref,
 			additionalProperties: _1,
 			patternProperties: _2,
 			...rest
