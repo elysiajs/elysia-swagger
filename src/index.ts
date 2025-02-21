@@ -85,7 +85,7 @@ export const swagger = async <Path extends string = '/swagger'>(
 		const scalarConfiguration: ReferenceConfiguration = {
 			spec: {
 				...scalarConfig.spec,
-				url: `${request.url}/json`
+				url: `${new URL(request.url).pathname.replace(/\/$/, "")}/json`
 			},
 			...scalarConfig,
 			// so we can showcase the elysia theme
