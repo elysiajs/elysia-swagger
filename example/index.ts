@@ -5,7 +5,7 @@ const schema = t.Object({
 	test: t.Literal('hello')
 })
 
-const app = new Elysia()
+const app = new Elysia({ precompile: true })
 	.use(
 		swagger({
 			provider: 'scalar',
@@ -45,12 +45,10 @@ const app = new Elysia()
 	.get(
 		'/',
 		() => {
-			test: 'hello'
+			return { test: 'hello' }
 		},
 		{
-			response: t.Object({
-				a: t.Ref('schema')
-			})
+			response: 'schema'
 		}
 	)
 	.listen(3000)

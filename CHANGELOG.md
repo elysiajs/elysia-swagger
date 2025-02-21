@@ -1,3 +1,7 @@
+# 1.2.2 - 22 Feb 2024
+Bug fix:
+- [#185](https://github.com/elysiajs/elysia-swagger/pull/185) Fix path issue in Scalar config
+
 # 1.2.1 - 19 Feb 2024
 Bug fix:
 - [#154](https://github.com/elysiajs/elysia-swagger/pull/154) prevent failed to fetch spec from URL error
