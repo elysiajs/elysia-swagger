@@ -151,7 +151,9 @@ export const registerSchemaPath = ({
 }) => {
 	hook = cloneHook(hook)
 
-	const contentType = hook?.type ?? [
+	const parsedContentTypes = hook?.parse?.map((p: { fn?: string }) => p?.fn)
+
+	const contentType = parsedContentTypes ?? [
 		'application/json',
 		'multipart/form-data',
 		'text/plain'
