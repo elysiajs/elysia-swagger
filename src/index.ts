@@ -22,6 +22,7 @@ export const swagger = async <Path extends string = '/swagger'>(
 		scalarCDN = '',
 		scalarConfig = {},
 		documentation = {},
+		openapi = '3.0.3',
 		version = '5.9.0',
 		excludeStaticFile = true,
 		path = '/swagger' as Path,
@@ -37,6 +38,7 @@ export const swagger = async <Path extends string = '/swagger'>(
 		scalarCDN: '',
 		scalarConfig: {},
 		documentation: {},
+		openapi: '3.0.3',
 		version: '5.9.0',
 		excludeStaticFile: true,
 		path: '/swagger' as Path,
@@ -152,7 +154,7 @@ export const swagger = async <Path extends string = '/swagger'>(
 		}
 
 		return {
-			openapi: '3.0.3',
+			openapi: openapi,
 			...{
 				...documentation,
 				tags: documentation.tags?.filter(
