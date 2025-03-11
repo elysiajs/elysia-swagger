@@ -48,6 +48,12 @@ export interface ElysiaSwaggerConfig<Path extends string = '/swagger'> {
      */
     scalarConfig?: ReferenceConfiguration
     /**
+     * OpenAPI version to be used
+     *
+     * @default 3.0.3
+     */
+    openapi?: string;
+    /**
      * Version to use for swagger cdn bundle
      *
      * @see unpkg.com/swagger-ui-dist
