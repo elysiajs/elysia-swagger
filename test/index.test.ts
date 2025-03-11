@@ -139,6 +139,19 @@ describe('Swagger', () => {
 		expect(res.trim().includes(expected.trim())).toBe(true)
 	})
 
+	it('OpenAPI version', async () => {
+		const app = new Elysia().use(
+			swagger({
+				openapi: '3.1.0'
+			})
+		)
+
+		await app.modules
+
+		const res = await app.handle(req('/swagger/json')).then((x) => x.json())
+		expect(res.openapi).toBe('3.1.0')
+	})
+
 	it('should not return content response when using Void type', async () => {
 		const app = new Elysia().use(swagger()).get('/void', () => {}, {
 			response: {
