@@ -29,7 +29,7 @@ export const ScalarRender = (
       }
     </style>
     <style>
-      ${config.customCss ?? elysiajsTheme}
+      ${config.theme ? (config.customCss ?? elysiajsTheme) : (config.customCss ?? "")}
     </style>
   </head>
   <body>
