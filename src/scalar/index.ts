@@ -1,11 +1,11 @@
 import { elysiajsTheme } from '@scalar/themes'
 import type { OpenAPIV3 } from 'openapi-types'
-import type { ReferenceConfiguration } from '@scalar/types'
+import type { ApiReferenceConfigurationWithSources } from '@scalar/types/api-reference' with { "resolution-mode": "import" };
 
 export const ScalarRender = (
     info: OpenAPIV3.InfoObject,
     version: string,
-    config: ReferenceConfiguration,
+    config: Partial<ApiReferenceConfigurationWithSources>,
     cdn: string
 ) => `<!doctype html>
 <html>
@@ -33,16 +33,16 @@ export const ScalarRender = (
     </style>
   </head>
   <body>
-    <script
-      id="api-reference"
-      data-url="${config.spec?.url}"
-      data-configuration='${JSON.stringify(config)}'
-    >
-    </script>
+    <div id="app"></div>
+
     <script src="${
         cdn
             ? cdn
             : `https://cdn.jsdelivr.net/npm/@scalar/api-reference@${version}/dist/browser/standalone.min.js`
     }" crossorigin></script>
+
+    <script>
+      Scalar.createApiReference('#app', ${JSON.stringify(config)})
+    </script>
   </body>
 </html>`

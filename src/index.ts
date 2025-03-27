@@ -7,7 +7,7 @@ import { ScalarRender } from './scalar'
 import { filterPaths, registerSchemaPath } from './utils'
 
 import type { OpenAPIV3 } from 'openapi-types'
-import type { ReferenceConfiguration } from '@scalar/types'
+import type { ApiReferenceConfigurationWithSources } from '@scalar/types/api-reference' with { "resolution-mode": "import" };
 import type { ElysiaSwaggerConfig } from './types'
 
 /**
@@ -45,8 +45,6 @@ export const swagger = <Path extends string = '/swagger'>({
 		...documentation.info
 	}
 
-	const relativePath = path.startsWith('/') ? path.slice(1) : path
-
 	const app = new Elysia({ name: '@elysiajs/swagger' })
 
 	const page = new Response(
@@ -70,15 +68,11 @@ export const swagger = <Path extends string = '/swagger'>({
 					info,
 					scalarVersion,
 					{
-						spec: {
-							...scalarConfig.spec,
-							url: specPath
-						},
+						sources: [{url: specPath}],
 						...scalarConfig,
 						// so we can showcase the elysia theme
-						// @ts-expect-error
 						_integration: 'elysiajs'
-					} satisfies ReferenceConfiguration,
+					} satisfies Partial<ApiReferenceConfigurationWithSources>,
 					scalarCDN
 				),
 		{
