@@ -1,6 +1,7 @@
 import type { OpenAPIV3 } from 'openapi-types'
 import type { ReferenceConfiguration } from '@scalar/types'
 import type { SwaggerUIOptions } from './swagger/types'
+import { RapidocConfig } from "./rapidoc";
 
 export interface ElysiaSwaggerConfig<Path extends string = '/swagger'> {
     /**
@@ -19,8 +20,9 @@ export interface ElysiaSwaggerConfig<Path extends string = '/swagger'> {
      * @default 'scalar'
      * @see https://github.com/scalar/scalar
      * @see https://github.com/swagger-api/swagger-ui
+     * @see https://github.com/rapi-doc/RapiDoc
      */
-    provider?: 'scalar' | 'swagger-ui'
+    provider?: 'scalar' | 'swagger-ui' | 'rapidoc'
     /**
      * Version to use for Scalar cdn bundle
      *
@@ -47,6 +49,12 @@ export interface ElysiaSwaggerConfig<Path extends string = '/swagger'> {
      * @see https://github.com/scalar/scalar/blob/main/documentation/configuration.md
      */
     scalarConfig?: ReferenceConfiguration
+    /**
+     * Rapidoc configuration
+     *'
+     * @see https://rapidocweb.com/api.html
+     */
+    rapidocConfig?: RapidocConfig
     /**
      * Version to use for swagger cdn bundle
      *
