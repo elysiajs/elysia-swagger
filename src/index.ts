@@ -9,6 +9,7 @@ import { filterPaths, registerSchemaPath } from './utils'
 import type { OpenAPIV3 } from 'openapi-types'
 import type { ReferenceConfiguration } from '@scalar/types'
 import type { ElysiaSwaggerConfig } from './types'
+import { RapidocRender } from "./rapidoc";
 
 /**
  * Plugin for [elysia](https://github.com/elysiajs/elysia) that auto-generate Swagger page.
@@ -21,6 +22,7 @@ export const swagger = async <Path extends string = '/swagger'>(
 		scalarVersion = 'latest',
 		scalarCDN = '',
 		scalarConfig = {},
+		rapidocConfig = {},
 		documentation = {},
 		version = '5.9.0',
 		excludeStaticFile = true,
@@ -36,6 +38,7 @@ export const swagger = async <Path extends string = '/swagger'>(
 		scalarVersion: 'latest',
 		scalarCDN: '',
 		scalarConfig: {},
+		rapidocConfig: {},
 		documentation: {},
 		version: '5.9.0',
 		excludeStaticFile: true,
@@ -93,18 +96,49 @@ export const swagger = async <Path extends string = '/swagger'>(
 			_integration: 'elysiajs'
 		}
 
-		return new Response(
-			provider === 'swagger-ui'
-				? SwaggerUIRender(
-						info,
-						version,
-						theme,
-						stringifiedSwaggerOptions,
-						autoDarkMode
-					)
-				: ScalarRender(info, scalarVersion, scalarConfiguration, scalarCDN),
-			{
-				headers: {
+		let html: string
+		switch (provider) {
+			case 'scalar':
+				html = ScalarRender(info, scalarVersion, scalarConfiguration, scalarCDN)
+				break
+			case 'swagger-ui':
+				html = SwaggerUIRender(
+					info,
+					version,
+					theme,
+					stringifiedSwaggerOptions,
+					autoDarkMode
+				)
+				break
+			case 'rapidoc':
+				html = RapidocRender(info, {
+					specUrl: openAPISpecUrl,
+
+					allowAdvancedSearch: true,
+					allowSpecFileDownload: true,
+					defaultSchemaTab: 'schema',
+					fillRequestFieldsWithExample: false,
+					headingText: info.title,
+					layout: 'column',
+					loadFonts: true,
+					persistAuth: true,
+					renderStyle: 'focused',
+					schemaDescriptionExpanded: true,
+					schemaExpandLevel: 10,
+					schemaStyle: 'table',
+					showHeader: false,
+					showMethodInNavBar: 'as-colored-block',
+					theme: 'light',
+					usePathInNavBar: true,
+
+					...rapidocConfig
+				})
+				break
+
+		}
+
+		return new Response(html, {
+			headers: {
 					'content-type': 'text/html; charset=utf8'
 				}
 			}
