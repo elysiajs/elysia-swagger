@@ -160,9 +160,13 @@ export const registerSchemaPath = ({
 					return x
 
 				case 'object':
-					if (x && typeof x.fn !== 'string') return
+					if (
+						x &&
+						typeof (x as { fn: string | Function })?.fn !== 'string'
+					)
+						return
 
-					switch (x.fn) {
+					switch ((x as { fn: string | Function })?.fn) {
 						case 'json':
 						case 'application/json':
 							return 'application/json'
@@ -185,7 +189,7 @@ export const registerSchemaPath = ({
 					}
 			}
 		})
-		.filter((x) => !!x)
+		.filter((x) => x !== undefined)
 
 	if (!contentType || contentType.length === 0)
 		contentType = ['application/json', 'multipart/form-data', 'text/plain']
