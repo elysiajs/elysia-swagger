@@ -1,3 +1,14 @@
+# 1.3.0-exp.1 - 1 May 2025
+Improvement:
+- use static response for documentation page
+- plugin is no longer async
+- model should be synced globally
+- use `parse` instead of `type` to determine content type
+
+# 1.3.0-exp.0 - 23 Apr 2025
+Change:
+- Add support for Elysia 1.3
+
 # 1.2.2 - 22 Feb 2024
 Bug fix:
 - [#185](https://github.com/elysiajs/elysia-swagger/pull/185) Fix path issue in Scalar config

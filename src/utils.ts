@@ -151,11 +151,44 @@ export const registerSchemaPath = ({
 }) => {
 	hook = cloneHook(hook)
 
-	const contentType = hook?.type ?? [
-		'application/json',
-		'multipart/form-data',
-		'text/plain'
-	]
+	if (hook.parse && !Array.isArray(hook.parse)) hook.parse = [hook.parse]
+
+	let contentType = (hook.parse as unknown[])
+		?.map((x) => {
+			switch (typeof x) {
+				case 'string':
+					return x
+
+				case 'object':
+					if (x && typeof x.fn !== 'string') return
+
+					switch (x.fn) {
+						case 'json':
+						case 'application/json':
+							return 'application/json'
+
+						case 'text':
+						case 'text/plain':
+							return 'text/plain'
+
+						case 'urlencoded':
+						case 'application/x-www-form-urlencoded':
+							return 'application/x-www-form-urlencoded'
+
+						case 'arrayBuffer':
+						case 'application/octet-stream':
+							return 'application/octet-stream'
+
+						case 'formdata':
+						case 'multipart/form-data':
+							return 'multipart/form-data'
+					}
+			}
+		})
+		.filter((x) => !!x)
+
+	if (!contentType || contentType.length === 0)
+		contentType = ['application/json', 'multipart/form-data', 'text/plain']
 
 	path = toOpenAPIPath(path)
 
@@ -331,7 +364,6 @@ export const registerSchemaPath = ({
 
 export const filterPaths = (
 	paths: Record<string, any>,
-	docsPath: string,
 	{
 		excludeStaticFile = true,
 		exclude = []
@@ -342,11 +374,6 @@ export const filterPaths = (
 ) => {
 	const newPaths: Record<string, any> = {}
 
-	// exclude docs path and OpenAPI json path
-	const excludePaths = [`/${docsPath}`, `/${docsPath}/json`].map((p) =>
-		normalize(p)
-	)
-
 	for (const [key, value] of Object.entries(paths))
 		if (
 			!exclude.some((x) => {
@@ -354,7 +381,6 @@ export const filterPaths = (
 
 				return x.test(key)
 			}) &&
-			!excludePaths.includes(key) &&
 			!key.includes('*') &&
 			(excludeStaticFile ? !key.includes('.') : true)
 		) {
