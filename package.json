@@ -68,8 +68,8 @@
         "typescript": "^5.5.3"
     },
     "dependencies": {
-        "@scalar/themes": "^0.9.52",
-        "@scalar/types": "^0.0.12",
+        "@scalar/themes": "^0.9.81",
+        "@scalar/types": "^0.1.3",
         "openapi-types": "^12.1.3",
         "pathe": "^1.1.2"
     }
