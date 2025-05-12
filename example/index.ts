@@ -5,7 +5,7 @@ const schema = t.Object({
 	test: t.Literal('hello')
 })
 
-const app = new Elysia({ precompile: true })
+const app = new Elysia()
 	.use(
 		swagger({
 			provider: 'scalar',
@@ -45,10 +45,15 @@ const app = new Elysia({ precompile: true })
 	.get(
 		'/',
 		() => {
-			return { test: 'hello' }
+			return { test: 'hello' as const }
 		},
 		{
 			response: 'schema'
 		}
 	)
+	.post('/json', ({ body }) => body, {
+		parse: 'formdata',
+		body: 'schema',
+		response: 'schema'
+	})
 	.listen(3000)
