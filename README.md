@@ -62,6 +62,9 @@ Customize Swagger config, refers to [Swagger 3.0.3 config](https://swagger.io/sp
 
 The endpoint to expose Swagger
 
+## scalarCDN
+Self-host the scalar bundle or point to a different CDN.
+
 ## excludeStaticFile
 @default true
 
